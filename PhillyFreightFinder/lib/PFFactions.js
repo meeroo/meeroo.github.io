@@ -1,3 +1,4 @@
+
 ///////////////////////////////////////////	
 //Action on feature selections////////////
 		function zoomToPoint(e){
@@ -395,10 +396,18 @@
 		function highlightportpoly(e) {
 			resetHighlight();
 			var layer = e.target;
-			layer.setStyle({
+			var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				layer.setStyle({ 
 				weight: 6,color:"#00ffff"
-			});
-			var props = layer.feature.properties
+				});
+				var props = layer.feature.properties;
+			}else{                        
+				e.setStyle({ 
+				weight: 6,color:"#00ffff"
+				});
+				var props = layersearch.properties;
+			}
             var feattype = '<p>'+ props.Type + ' Terminal</p>';
             var info = '<p>' + props.Name + '</p>';
 			var content = "<div id='baseInfo'>"
@@ -433,15 +442,22 @@
 			document.getElementById('info').innerHTML = content;
             document.getElementById('featureName').className = 'portFN';    
 			document.getElementById('infoheader').className = 'portcl';	
-			document.getElementById('iconography').className = 'porticon';
+			document.getElementById('iconography').className = 'porticon icon';
+			toggleinfo();
 		};	
 	//Port Point
 		function highlightporticon(e) {
 			resetHighlight();
-            highlightMarkers(e);
-			var layer = e.target;
-			var props = layer.feature.properties
-            var info = '<h1>' + props.Name + '</h1>';
+           	var layer = e.target;
+            var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				highlightMarkers(e);
+				var props = layer.feature.properties;
+			}else{                        
+				highlightMarkersearch(e);
+				var props = layersearch.properties;
+			}
+            var info = '<p>' + props.Name + '</p>';
             var content = "<table style='border-bottom:1px solid #cccccc;'>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Type + "</td></tr>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
@@ -460,17 +476,26 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'portcl';	
-			document.getElementById('iconography').className = 'porticon';
+			document.getElementById('iconography').className = 'porticon icon';
+			toggleinfo();
 		};	
 	//Anchorage Poly	
 		function highlightanchoragepoly(e) {
 			resetHighlight();
 			var layer = e.target;
-			layer.setStyle({
+			var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				layer.setStyle({ 
 				weight: 6,color:"#00ffff"
-			});
-			var props = layer.feature.properties
-            var info = '<h1>' + props.Name + '</h1>';
+				});
+				var props = layer.feature.properties;
+			}else{                        
+				e.setStyle({ 
+				weight: 6,color:"#00ffff"
+				});
+				var props = layersearch.properties;
+			}
+            var info = '<p>' + props.Name + '</p>';
 			var content = "<table style='border-bottom:1px solid #999999;'>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Adjacent Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
                     //+"<tr><td><i style='font-size:10px;color:#999999;'>Start Point: </i>" + props.Start + "</td></tr>"
@@ -481,15 +506,22 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'portcl';	
-			document.getElementById('iconography').className = 'anchicon';
+			document.getElementById('iconography').className = 'anchicon icon';
+			toggleinfo();
 		};
 	//Anchorage Point
 		function highlightanchoricon(e) {
 			resetHighlight();
-            highlightMarkers(e);
-			var layer = e.target;
-			var props = layer.feature.properties
-            var info = '<h1>' + props.Name + '</h1>';
+            var layer = e.target;
+            var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				highlightMarkers(e);
+				var props = layer.feature.properties;
+			}else{                        
+				highlightMarkersearch(e);
+				var props = layersearch.properties;
+			}
+            var info = '<p>' + props.Name + '</p>';
             var content = "<table style='border-bottom:1px solid #999999;'>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Adjacent Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
                     //+"<tr><td><i style='font-size:10px;color:#999999;'>Start Point: </i>" + props.Start + "</td></tr>"
@@ -500,17 +532,26 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'portcl';	
-			document.getElementById('iconography').className = 'anchicon';
+			document.getElementById('iconography').className = 'anchicon icon';
+			toggleinfo();
 		};
 	//River Poly	
 		function highlightriver(e) {
 			resetHighlight();
 			var layer = e.target;
-			layer.setStyle({
+			var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				layer.setStyle({ 
 				weight: 6,color:"#00ffff"
-			});
-			var props = layer.feature.properties
-            var info = '<h1>' + props.NAME + '</h1>';
+				});
+				var props = layer.feature.properties;
+			}else{                        
+				e.setStyle({ 
+				weight: 6,color:"#00ffff"
+				});
+				var props = layersearch.properties;
+			}
+            var info = '<p>' + props.NAME + '</p>';
 			var content = "<table style='border-bottom:1px solid#999999;'>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Adjacent Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'><a title='Nautical miles from Atlantic Ocean' class='info-tipTip'>Start Point</a>: </i>" + props.Start + "</td></tr>"
@@ -523,7 +564,8 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'portcl';	
-			document.getElementById('iconography').className = 'rivericon';
+			document.getElementById('iconography').className = 'rivericon icon';
+			toggleinfo();
 		};			
 		
 	//Freight Centure features///////////

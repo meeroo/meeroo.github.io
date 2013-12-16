@@ -76,9 +76,9 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         label.intermod {background: url('images/flat/intermodal.png') no-repeat;}
         label.gradex {background: url('images/flat/gradecrossing.png') no-repeat;}
         label.railbrdg {background: url('images/flat/bridge1.png') no-repeat;}
-        label.riveric {background: url('images/river.png') no-repeat;}
-        label.anchic {background: url('images/anchor.png') no-repeat;}
-        label.portic {background: url('images/ports.png') no-repeat;}
+        label.riveric {background: url('images/flat/river.png') no-repeat;}
+        label.anchic {background: url('images/flat/anchor.png') no-repeat;}
+        label.portic {background: url('images/flat/ports.png') no-repeat;}
         label.commic {background: url('images/airport1.png') no-repeat;}
         label.relic {background: url('images/airport2.png') no-repeat;}
         label.megic {background: url('images/19.png') no-repeat;}
@@ -180,10 +180,12 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		}
 .railcl {
 		color:white!important;
-		background-color: #FBA919!important;
+		border-color: #FBA919!important;
 		background-color: #FBA919!important;
 		}
 .portcl {
+		color:white!important;
+		border-color: #0E76BC!important;
 		background-color: #0E76BC!important;
 		}
 .frtctrintcl {
@@ -231,13 +233,13 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		background-image:url('images/flat/intermodal.png');
 		}
 .porticon{
-		background-image:url('images/ports.png');
+		background-image:url('images/flat/ports.png');
 		}
 .rivericon{
-		background-image:url('images/river.png');
+		background-image:url('images/flat/river.png');
 		}
 .anchicon{
-		background-image:url('images/anchor.png');
+		background-image:url('images/flat/anchor.png');
 		}
 .fcintericon{
 		background-image:url('images/17.png');

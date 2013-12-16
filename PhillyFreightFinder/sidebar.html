@@ -241,11 +241,10 @@
                                 </div>
                             </div>
                         </div>
-                        <!--
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <a href=""><div class="mricon-info portinfo"> </div></a>
+                                    <a href="#" onclick="$('#railModal').modal('show'); return false;"><div class="PFFicon-info legicon railinfo"> </div></a>
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#port-layers">
                                         <div class="panellink portinfo">
                                             <span>Ports/waterways</span>
@@ -272,6 +271,7 @@
                                 </div>
                             </div>
                         </div>
+                         <!--
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -298,6 +298,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -511,7 +512,7 @@
         <script type="text/javascript" src="lib/PFFactions.js"></script>
         <script type="text/javascript">
             //establish map and search groups
-            var map, countySearch = [], highwaySearch = [], truckParkSearch = [], nhsSearch = [], hwyBridgeSearch = [], railSearch = [], railyardSearch = [], intermodalSearch = [], RailBridgeSearch = [], xingSearch = []; 
+            var map, countySearch = [], highwaySearch = [], truckParkSearch = [], nhsSearch = [], hwyBridgeSearch = [], railSearch = [], railyardSearch = [], intermodalSearch = [], RailBridgeSearch = [], xingSearch = [] riverSearch =[], portSearch =[], anchSearch = []; 
 
             $(document).ready(function() {
                 $('[rel=tooltip]').tooltip();
@@ -883,7 +884,107 @@
                 $.getJSON("data/railbrdgPts.geojson", function (data) {
                     railbridgept.addData(data);
                 });
-
+                //define maritime facilities
+                //define river
+                var river = L.geoJson(null, {
+                    style: {fillColor: "#55B8DF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65},    
+                    onEachFeature: function (feature, layer){
+                        layer.on({
+                            click: highlightriver,
+                            dblclick: zoomToFeature
+                        });
+                        riverSearch.push({
+                                value: layer.feature.properties.NAME,
+                                tokens: [layer.feature.properties.NAME],
+                                layer: "Rivers",
+                                id: L.stamp(layer),
+                                bounds: layer.getBounds()
+                            });
+                    }
+                })
+                $.getJSON("data/river.geojson", function (data) {
+                    river.addData(data);
+                });
+                //define ports
+                var portpoly = L.geoJson(null, {
+                    style: {fillColor: "#29A0CF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},    
+                    onEachFeature: function (feature, layer){
+                        layer.on({
+                            click: highlightportpoly,
+                            dblclick: zoomToFeature
+                        });
+                        portSearch.push({
+                            value: layer.feature.properties.Name,
+                            tokens: [layer.feature.properties.Name],
+                            layer: "PortTerminals",
+                            id: L.stamp(layer),
+                            bounds: layer.getBounds()
+                        });
+                    }
+                });
+                $.getJSON("data/portsPoly.geojson", function (data) {
+                    portpoly.addData(data);
+                });
+                var prticon = L.icon({
+                    iconUrl: 'ports.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15],
+                    popupAnchor: [0, 15]
+                });
+                var porticon = L.geoJson(null, {
+                        pointToLayer: function (feature, latlng) {
+                            return L.marker(latlng, {icon: prticon});
+                            },
+                        onEachFeature: function (feature, layer){
+                            layer.on({
+                                click: highlightporticon,
+                                dblclick: zoomToPoint
+                            });
+                            }
+                }); 
+                $.getJSON("data/portsPts.geojson", function (data) {
+                    porticon.addData(data);
+                });
+                //define anchorages
+                var anchoragepoly = L.geoJson(null, {
+                    style: {fillColor: "#0E76BC", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65},    
+                    onEachFeature: function (feature, layer){
+                        layer.on({
+                            click: highlightanchoragepoly,
+                            dblclick: zoomToFeature
+                        });
+                        anchSearch.push({
+                            value: layer.feature.properties.Name,
+                            tokens: [layer.feature.properties.Name],
+                            layer: "Anchorages",
+                            id: L.stamp(layer),
+                            bounds: layer.getBounds()
+                        });
+                    }
+                });
+                $.getJSON("data/anchPoly.geojson", function (data) {
+                    anchoragepoly.addData(data);
+                });
+                var anchicon = L.icon({
+                    iconUrl: 'anchor.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15],
+                    popupAnchor: [0, 15]
+                    });
+                var anchoricon = L.geoJson(anchoragepoint, {
+                        pointToLayer: function (feature, latlng) {
+                            return L.marker(latlng, {icon: anchicon});
+                            },
+                        onEachFeature: function (feature, layer){
+                            layer.on({
+                                click: highlightanchoricon,
+                                dblclick: zoomToPoint
+                            });
+                            }
+                });
+                $.getJSON("data/anchPts.geojson", function (data) {
+                    anchoricon.addData(data);
+                });
 
 
 
@@ -923,6 +1024,7 @@
             //add layers in groups by order
 
             (counties).setZIndex(0).addTo(map);
+            map.addLayer(river);
             var railyardgroup = new L.FeatureGroup([railyardpt, railyardpoly]).addTo(map);
             var intermodalgroup = new L.FeatureGroup([intermodalpt, intermodalpoly]).addTo(map);
             var Rail = {
@@ -932,7 +1034,13 @@
                 "Class I Grade Crossing": gradexing,
                 "Rail River Crossing": railbridgept
             };
-            
+            var portGroup = new L.FeatureGroup([porticon, portpoly]).addTo(map);
+            var anchorageGroup = new L.FeatureGroup([anchoricon, anchoragepoly]).addTo(map);
+            var Portwater = {
+                "Navigable River": river,
+                "Port Terminal": portGroup,
+                "Anchorage": anchorageGroup
+            };
             var nhsgroup =new L.FeatureGroup([nhspoly, nhs]).addTo(map);
             var trkparkgroup =new L.FeatureGroup([truckparkpoly, tppoints]).addTo(map);
             var Highway = {
@@ -1080,6 +1188,21 @@
                     minLength: 2,
                     header: "<h5 class='typeahead-header'><img src='lib/images/flat/bridge1.png' class='searchico'>Rail River Crossing</h5>"
                 },{
+                    name: "Rivers",
+                    local: riverSearch,
+                    minLength: 2,
+                    header: "<h5 class='typeahead-header'><img src='lib/images/flat/river.png' class='searchico'>River Channels</h5>"
+                },{
+                    name: "PortTerminals",
+                    local: portSearch,
+                    minLength: 2,
+                    header: "<h5 class='typeahead-header'><img src='lib/images/flat/ports.png' class='searchico'>Port Terminals</h5>"
+                },{
+                    name: "Anchorages",
+                    local: anchSearch,
+                    minLength: 2,
+                    header: "<h5 class='typeahead-header'><img src='lib/images/flat/anchor.png' class='searchico'>Anchorages</h5>"
+                },{
                     name: "GeoNames",
                     remote: {
                         url: "http://ws.geonames.org/searchJSON?featureClass=P&maxRows=5&countryCode=US&name_startsWith=%QUERY",
@@ -1195,6 +1318,36 @@
                         map.setView([datum.lat, datum.lng], 17);
                         if (map._layers[datum.id]) {
                             highlightrailrivcrossing(map._layers[datum.id]);
+                        }; 
+                    };
+                    if (datum.layer === "Rivers") {
+                        if (!map.hasLayer(river)) {
+                            map.addLayer(river);
+                            $("#river").prop("checked", true);
+                        };
+                        map.setView([datum.lat, datum.lng], 17);
+                        if (map._layers[datum.id]) {
+                            highlightriver(map._layers[datum.id]);
+                        }; 
+                    };
+                    if (datum.layer === "PortTerminals") {
+                        if (!map.hasLayer(portGroup)) {
+                            map.addLayer(portGroup);
+                            $("#portGroup").prop("checked", true);
+                        };
+                        map.setView([datum.lat, datum.lng], 17);
+                        if (map._layers[datum.id]) {
+                            highlightportpoly(map._layers[datum.id]);
+                        }; 
+                    };
+                    if (datum.layer === "Anchorages") {
+                        if (!map.hasLayer(anchorageGroup)) {
+                            map.addLayer(anchorageGroup);
+                            $("#anchorageGroup").prop("checked", true);
+                        };
+                        map.setView([datum.lat, datum.lng], 17);
+                        if (map._layers[datum.id]) {
+                            highlightanchoragepoly(map._layers[datum.id]);
                         }; 
                     };
                     if (datum.layer === "GeoNames") {
