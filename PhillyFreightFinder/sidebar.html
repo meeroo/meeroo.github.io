@@ -244,7 +244,7 @@
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <a href="#" onclick="$('#railModal').modal('show'); return false;"><div class="PFFicon-info legicon railinfo"> </div></a>
+                                    <a href="#" onclick="$('#railModal').modal('show'); return false;"><div class="PFFicon-info legicon portinfo"> </div></a>
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#port-layers">
                                         <div class="panellink portinfo">
                                             <span>Ports/waterways</span>
@@ -253,7 +253,7 @@
                                     <div class="togglebox"><div id="water_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
                                 </div>
                                 <div id="port-layers" class="panel-collapse collapse">
-                                    <div class="panel-body" style="padding: 0px 15px;">
+                                    <div class="panel-body" style="padding: 0;">
                                         <input type="hidden" id="h20Chkd" value="false" /> 
                                         <div class="checkbox">
                                             <input type="checkbox" name="LayerCont" id="river" class="water" z-index="4" checked>
@@ -271,7 +271,7 @@
                                 </div>
                             </div>
                         </div>
-                         <!--
+                        <!--
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -298,7 +298,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -512,7 +511,7 @@
         <script type="text/javascript" src="lib/PFFactions.js"></script>
         <script type="text/javascript">
             //establish map and search groups
-            var map, countySearch = [], highwaySearch = [], truckParkSearch = [], nhsSearch = [], hwyBridgeSearch = [], railSearch = [], railyardSearch = [], intermodalSearch = [], RailBridgeSearch = [], xingSearch = [] riverSearch =[], portSearch =[], anchSearch = []; 
+            var map, countySearch = [], highwaySearch = [], truckParkSearch = [], nhsSearch = [], hwyBridgeSearch = [], railSearch = [], railyardSearch = [], intermodalSearch = [], RailBridgeSearch = [], xingSearch = [], riverSearch =[], portSearch =[], anchSearch = []; 
 
             $(document).ready(function() {
                 $('[rel=tooltip]').tooltip();
@@ -971,7 +970,7 @@
                     iconAnchor: [15, 15],
                     popupAnchor: [0, 15]
                     });
-                var anchoricon = L.geoJson(anchoragepoint, {
+                var anchoricon = L.geoJson(null, {
                         pointToLayer: function (feature, latlng) {
                             return L.marker(latlng, {icon: anchicon});
                             },
