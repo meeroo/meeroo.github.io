@@ -1,16 +1,16 @@
 @font-face {
 	font-family: 'PFF-icons';
-	src:url('fonts/PFF-icons.eot');
+	src:url('../fonts/PFF-icons.eot');
 	font-weight: normal;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: 'PFF-icons';
-	src:url('fonts/PFF-icons.eot?#iefix') format('embedded-opentype'),
-		url('fonts/PFF-icons.ttf') format('truetype'),
-		url('fonts/PFF-icons.woff') format('woff'),
-		url('fonts/PFF-icons.svg#PFF-icons') format('svg');
+	src:url('../fonts/PFF-icons.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/PFF-icons.ttf') format('truetype'),
+		url('../fonts/PFF-icons.woff') format('woff'),
+		url('../fonts/PFF-icons.svg#PFF-icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
