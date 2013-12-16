@@ -1,0 +1,2122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="DVRPC">
+    <title>PhillyFreightFinder 3.1</title>
+  
+    <link href='lib/style.css' rel='stylesheet'/>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="lib/assets/typeahead.js/typeahead.js-bootstrap.css" rel="stylesheet" type="text/css"> <!--https://github.com/jharding/typeahead.js-bootstrap.css-->
+    <link href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" rel="stylesheet" type="text/css">
+  
+  <!--[if lte IE 8]>
+        <link href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" rel="stylesheet" type="text/css">
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet">
+    <![endif]-->
+
+  <style>
+    html, body, #sidebar, #container {
+            height: 100%;
+            margin: 0px;
+        }
+    body {
+            padding-top: 50px;
+            font-family:"Century Gothic", "Apple Gothic", san-serif;
+        }
+    p {font-family:"Century Gothic", "Apple Gothic", san-serif;}
+
+    label { font-size: 1.1em!important;
+            font-weight: normal;}
+    
+            #loading {
+            position: absolute;
+            width: 220px;
+            height: 19px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -110px;
+            z-index: 20001;
+        }
+        .navbar-fixed-top{border-top: 7px solid #312867;
+            border-bottom: 7px solid #312867;}
+		.row{padding-top:14px!important;}
+        .navbar-header {
+        	background-image: url('lib/images/headerStripe.png'), -moz-linear-gradient(left, #312867, #396ab2);
+			background-image: url('lib/images/headerStripe.png'), -ms-linear-gradient(left, #312867, #396ab2);
+			background-image: url('lib/images/headerStripe.png'), -o-linear-gradient(left, #312867, #396ab2);
+			background-image: url('lib/images/headerStripe.png'), -webkit-gradient(linear, left top, right top, from(#312867), to(#396ab2));
+			background-image: url('lib/images/headerStripe.png'), -webkit-linear-gradient(left, #312867, #396ab2);
+			background-image: url('lib/images/headerStripe.png'), linear-gradient(left, #312867, #396ab2);}
+        .navbar .navbar-brand {
+            font-weight: bold;
+            font-size: 22px;
+            color: white;
+            white-space: nowrap;
+            padding: 0px!important;
+        }
+        .checkbox{padding-left:0px!important;}
+        .highlightMarker {outline:4px solid #00ffff!important;
+            z-index:1000!important;}
+        #map {
+            background-image: url('lib/images/mapBG.png');
+            background-repeat: repeat;
+        }
+        .dvrpc-logo{display:inline-block;
+        		}
+        .dvrpc-pff{display:inline-block;
+        		}
+        .tt-dropdown-menu {
+            overflow: auto;
+        }
+        .tt-hint, .tt-query {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        .typeahead-header {
+            margin: 0 5px 5px 5px;
+            padding: 3px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        .search-container {
+            width: 250px;
+        }
+        #searchbox {
+            -webkit-border-top-left-radius: 4px;
+            -webkit-border-bottom-left-radius: 4px;
+            -moz-border-top-left-radius: 4px;
+            -moz-border-bottom-left-radius: 4px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        .leaflet-popup-content {
+            margin-top: 14px;
+            margin-bottom: 0px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .navbar-inverse .navbar-nav>li>a{
+            color:#BBE6FA;
+        }
+        .panel-heading a:hover {
+            text-decoration: none;
+        }
+        .panel-heading{
+            padding:0px 0px!important;
+        }
+        .legend-icon {
+            width: 35px;
+            height: 35px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        .togglebox input[type="checkbox"]{display:block;}
+        input[type="checkbox"]{display:none;}
+        .checkbox input[type="checkbox"]{margin-top:8px;}
+        .checkbox label{
+            padding-left: 40px;
+            background-size: 33px!important;
+            height: 33px;
+            display: block;
+            padding-top:5px;}
+        input[type="checkbox"] + label{opacity:0.4;
+                    filter:alpha(opacity=40);}
+        input[type="checkbox"]:checked + label{opacity:1.0;
+                    filter:alpha(opacity=100);}
+
+        label.freeway {background: url('lib/images/truck.png') no-repeat;}
+        label.NHSconn {background: url('lib/images/nhs.png') no-repeat;}
+        label.trckpark {background: url('lib/images/parking.png') no-repeat;}
+        label.hwybrdg {background: url('lib/images/bridge2.png') no-repeat;}
+        label.raillin {background: url('lib/images/train.png') no-repeat;}
+        label.railyrd {background: url('lib/images/railyard.png') no-repeat;}
+        label.intermod {background: url('lib/images/intermodal.png') no-repeat;}
+        label.gradex {background: url('lib/images/gradecrossing.png') no-repeat;}
+        label.railbrdg {background: url('lib/images/bridge1.png') no-repeat;}
+        label.riveric {background: url('lib/images/river.png') no-repeat;}
+        label.anchic {background: url('lib/images/anchor.png') no-repeat;}
+        label.portic {background: url('lib/images/ports.png') no-repeat;}
+        label.commic {background: url('lib/images/airport1.png') no-repeat;}
+        label.relic {background: url('lib/images/airport2.png') no-repeat;}
+        label.megic {background: url('lib/images/19.png') no-repeat;}
+        label.majic {background: url('lib/images/18.png') no-repeat;}
+        label.interic {background: url('lib/images/17.png') no-repeat;}
+
+        .infobox {
+            background:url('lib/images/panelInfo.png') no-repeat right top;
+            width: 45px;
+            height: 31px;
+            float: left;
+            margin-right:8px;
+        }
+        .truckinfo{background-color:#894B9E;}
+        .railinfo{background-color:#FBA919;}
+        .portinfo{background-color:#0E76BC;}
+        .fcinfo{background-color:#C2332C;}
+        .airinfo{background-color:#3B6E35;}
+        
+        .uncheck{background:url('lib/images/check.png') no-repeat;}
+        .check{background:url('lib/images/uncheck.png') no-repeat;}
+        a.toggle {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            display: block;
+            -webkit-border-radius: 0 !important;
+            -moz-border-radius: 0 !important;
+            border-radius: 0 !important;
+            -webkit-border-top-right-radius: 4px !important;
+            -moz-border-top-right-radius: 4px !important;
+            border-top-right-radius: 4px !important;
+            -webkit-border-bottom-right-radius: 4px !important;
+            -moz-border-bottom-right-radius: 4px !important;
+            border-bottom-right-radius: 4px !important;
+            background-color: #222;
+            color: white;
+            opacity: 0.8;
+            z-index: 100;
+        }
+        .panellink{
+            padding: 3px 15px 4px 45px;
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .panellink:hover{
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+        }
+        .togglebox{
+            width: 30px;
+            height: 31px;
+            background-color: #B6B6B6;
+            margin-top: -31px;
+            float: right;
+        }
+        .leaflet-control-view-center { background-image: url('lib/images/region.png');
+            width: 35px!important;
+            height: 35px!important;
+            background-color:#428bca!important; }
+
+        a:hover.toggle {
+            background-color: #222;
+            color: white;
+            opacity: 1;
+        }
+        
+        @media screen and (min-width: 768px) {
+            .modal-dialog {
+                width:720px!important;
+            }
+        }
+
+        @media (max-width: 1080px) {
+            .navbar .navbar-brand {
+                font-size: 18px;
+                float: left;
+            }
+            .search-container {
+                width: 150px;
+            }
+            .leaflet-control-attribution {
+                display: none;
+            }
+            .dvrpc-logo{display:none;}
+        }
+        @media (max-width: 768px){
+            .search-container {
+                width: 100%;
+            }
+        }
+        /* Print Handling */
+        @media print {
+            .navbar, .toggle, #sidebar {
+                display: none !important;
+            }
+        }
+  </style>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top pffheader">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand">
+            	<div class="dvrpc-logo"><img src='lib/images/header_dvrpc.png' height= '50px'/></div>
+            	<div class="dvrpc-pff"><img src='lib/images/header_pff.png' height= '50px'/></div>
+            </div>
+        </div>
+        <div id="navbar-links" class="navbar-collapse collapse">
+             <form class="navbar-form navbar-right">
+                    <div class="input-group search-container">
+                        <input id="searchbox" type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+            </form>
+            <ul class="nav navbar-nav">
+                <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="$('#aboutModal').modal('show'); return false;"><i class="glyphicon glyphicon-info-sign" style="color: white"></i>&nbsp;&nbsp;About</a></li>
+                <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="$('#contactModal').modal('show'); return false;"><i class="glyphicon glyphicon-question-sign" style="color: white"></i>&nbsp;&nbsp;How to Use</a></li>
+               <!-- <li class="dropdown">
+                    <a id="toolsDrop" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-globe" style="color: white"></i>&nbsp;&nbsp;Tools <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="map.fitBounds(boroughs.getBounds()); return false;"><i class="icon-fullscreen"></i>&nbsp;&nbsp;Zoom To Full Extent</a></li>
+                        <li><a href="#" onclick="$('#legendModal').modal('show'); return false;"><i class="icon-picture"></i>&nbsp;&nbsp;Show Legend</a></li>
+                        <li class="divider"></li>
+                            <li><a href="#" onclick="$('#loginModal').modal('show'); return false;"><i class="icon-user"></i>&nbsp;&nbsp;Login</a></li>
+                    </ul>
+                </li>
+                <li><a href="https://github.com/bmcbride/bootleaf" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="icon-github-alt" style="color: white"></i>&nbsp;&nbsp;GitHub</a></li>-->
+            </ul>
+           
+        </div><!--/.navbar-collapse -->
+    </div>
+<!--Landing Page-->
+
+<!--Sidebar-->
+    <div class="row" id="container">
+        <div class="col-sm-3 col-lg-3" id="sidebar" style="padding: 10px; overflow: auto;">
+
+            <div class="tab-content" style="padding-top: 10px;">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a href="#" onclick="$('#truckModal').modal('show'); return false;"><div class="mricon-info truckinfo"> </div></a>
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#Trucking-layers">
+                                    <div class="panellink truckinfo">
+                                        <span>Trucking/highways</span>
+                                    </div>
+                                </a>
+                                <div class="togglebox"><div id="truck_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
+                            </div> 
+                            <div id="Trucking-layers" class="panel-collapse collapse">
+                                <div class="panel-body" style="padding: 0px 15px;">
+                                        <input type="hidden" id="trkChkd" value="false" /> 
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="freeway" class="trucks" z-index="8" checked>
+                                        <label class="freeway" for="freeway">Freeway</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="nhsgroup" class="trucks" z-index="15" checked>
+                                        <label class="NHSconn" for="nhsgroup">NHS Connector</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="trkparkgroup" class="trucks" z-index="16" checked>
+                                        <label class="trckpark" for="trkparkgroup">Truck Parking</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="hwyrivcrossing" class="trucks" z-index="5" checked>
+                                        <label class="hwybrdg" for="hwyrivcrossing">Highway River Crossing</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a href=""><div class="mricon-info railinfo"> </div></a>
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#Rail-layers">
+                                    <div class="panellink railinfo">
+                                        <span>Freight Rail</span>
+                                    </div>
+                                </a>
+                                <div class="togglebox"><div id="rail_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
+                            </div>
+                            <div id="Rail-layers" class="panel-collapse collapse">
+                                <div class="panel-body" style="padding: 0px 15px;">
+                                    <input type="hidden" id="railChkd" value="false" /> 
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="railines" class="rails" z-index="9" checked>
+                                        <label class="raillin" for="railines">Rail Line</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="railyardgroup" class="rails" z-index="5" checked>
+                                        <label class="railyrd" for="railyardgroup">Rail Yard</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="intermodalgroup" class="rails" z-index="4" checked>
+                                        <label class="intermod" for="intermodalgroup">Intermodal Rail Yard</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="gradexing" class="rails" z-index="14" checked>
+                                        <label class="gradex" for="gradexing">Class I Grade Crossing</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="railbridgept" class="rails" z-index="13" checked>
+                                        <label class="railbrdg" for="railbridgept">Rail River Crossing</label>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a href=""><div class="mricon-info portinfo"> </div></a>
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#port-layers">
+                                    <div class="panellink portinfo">
+                                        <span>Ports/waterways</span>
+                                    </div>
+                                </a>
+                                <div class="togglebox"><div id="water_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
+                            </div>
+                            <div id="port-layers" class="panel-collapse collapse">
+                                <div class="panel-body" style="padding: 0px 15px;">
+                                    <input type="hidden" id="h20Chkd" value="false" /> 
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="river" class="water" z-index="4" checked>
+                                        <label class="riveric" for="river">Navigable River</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="portGroup" class="water" z-index="5" checked>
+                                        <label class="portic" for="portGroup">Port Terminal</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="anchorageGroup" class="water" z-index="6" checked>
+                                        <label class="anchic" for="anchorageGroup">Anchorage</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                 <a href=""><div class="mricon-info airinfo"> </div></a>
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#Air-layers">
+                                    <div class="panellink airinfo">
+                                        <span>Airports</span>
+                                    </div>
+                                </a>
+                                <div class="togglebox"><div id="air_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
+                            </div>
+                            <div id="Air-layers" class="panel-collapse collapse">
+                                <div class="panel-body" style="padding: 0px 15px;">
+                                    <input type="hidden" id="airChkd" value="false" />
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="commGroup" class="air" z-index="1" checked>
+                                        <label class="commic" for="commGroup">Commercial</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="relGroup" class="air" z-index="2" checked>
+                                        <label class="relic" for="relGroup">Reliever</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                 <a href=""><div class="mricon-info fcinfo"> </div></a>
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#FC-layers">
+                                    <div class="panellink fcinfo">
+                                        <span>Freight Centers</span>
+                                    </div>
+                                </a>
+                                <div class="togglebox"><div id="fc_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
+                            </div>
+                            <div id="FC-layers" class="panel-collapse collapse">
+                                <div class="panel-body" style="padding: 0px 15px;">
+                                    <input type="hidden" id="fcChkd" value="false" />
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="FCmegagroup" class="fc" z-index="1" checked>
+                                        <label class="megic" for="FCmegagroup">Mega Center</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="FCmajorgroup" class="fc" z-index="2" checked>
+                                        <label class="majic" for="FCmajorgroup">Major Center</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="LayerCont" id="FCintergroup" class="fc" z-index="3" checked>
+                                        <label class="interic" for="FCintergroup">Intermediate Center</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div><!--Side bar collapse-->
+
+        <!---InfoBox -->
+        <div id='infobox_'>
+                <div id='iconography'></div>
+                <div id='featureName' ></div>
+                <div id='infoheader' class='ihholder'><h1>Click feature to view details</h1></div>
+                <div id='info'></div>
+        </div><!--Infobox collpse-->
+        
+        <!--Map-->
+        <div class="col-sm-9 col-lg-9" id="map">
+           <!--<div id="loading" style="display: block;">
+                <div class="loading-indicator">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-info" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>-->
+        </div><!--Map Collapse-->
+    </div>
+    <a href="#" type="button" rel="tooltip" class="toggle btn btn-default" data-toggle="tooltip" data-placement="right" title="Toggle sidebar"><i class="icon-chevron-left"></i></a>
+
+    <div class="modal fade" id="aboutModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="height: 65px!important;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <p><a href="http://www.dvrpc.org" target="_blank"> <img  id="maplogo" style="position:absolute; left 2px; border:none; vertical-align:middle;"src="lib/images/dvrpclogogrey.png"/></a>
+                                <img  id="FFlogo_about" style="position:absolute; left: 160px; border:none;vertical-align:middle;" src="lib/images/titleA.png" />
+                            </p>
+                </div>
+
+                <div class="modal-body">
+                     <ul id="aboutTabs" class="nav nav-tabs">
+                          <li class="active"><a href="#tabs-1" data-toggle="tab">About</a></li>
+                          <li><a href="#tabs-44" data-toggle="tab">Uses</a></li>
+                          <li><a href="#tabs-45" data-toggle="tab">Delaware Valley</a></li>
+                          <li><a href="#tabs-2" data-toggle="tab">Background</a></li>
+                          <li><a href="#tabs-3" data-toggle="tab">Disclaimer</a></li>
+                          <li><a href="#tabs-4" data-toggle="tab">Contacts</a></li>
+                      </ul>
+
+                    <div id="aboutTabsContent" class="tab-content" style="padding-top: 10px;">
+                        <div class="tab-pane fade active in" id="tabs-1">
+                            <p>Welcome to <i>PhillyFreightFinder, </i>the freight mapping and data platform for the Delaware Valley! <i>PhillyFreightFinder</i> is a dynamic, web-based mapping application that pinpoints freight facilities and freight activity in the Philadelphia-Camden-Trenton region. In addition, this tool also highlights how the various freight system components intertwine and complement one another. </p>
+                            <p><i>PhillyFreightFinder</i> contains 20 individual layers and over 350 features of infrastructure and facilities that are organized into seven categories.   These elements form the core of the region’s extraordinary freight network and services that link the region to the global economy.</p>
+                            <p><i>PhillyFreightFinder </i>is fully customizable, giving users the ability to easily control both the extent of the mapping window and the combination of layers to be displayed. A description of how to use the tool is available above the map window. A description of each category and layer is available in the left hand menu bar by clicking on the information button next to the applicable category. </p>
+                            <p>Lines, uniquely designed icons, and polygons are utilized to represent individual freight and transportation facilities. Users can click on any highlighted line, icon, or polygon to activate an information window containing basic information about the feature. In addition to items such as the facility name and owner, the windows provide indicators of capacity and activity. Many windows also include links to more detailed information from DVRPC or other sources.</p>
+                            <font color='red' size='1px'><i>Version 1.2- Last Updated: April 2013</i></font>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-44">
+                            <p><i>PhillyFreightFinder</i> has been created with a variety of uses and users in mind. Some of these are:</p>
+                            <ul>
+                                <li>Foundation for a recurring freight data program for DVRPC and its private and public sector partners</li>
+                                <li>Reference tool for county and city planners and state DOTs to identify needed freight transportation improvements</li>
+                                <li>Marketing tool for area shippers, carriers, and economic development agencies</li>
+                                <li>Resource for the general public, municipal officials, and others not familiar with freight transportation facilities and operations</li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-45">
+                            <div style="float:left;width:45%;margin-right:5px;">
+                                <p><b>The Delaware Valley Region: </b>The <i>PhillyFreightFinder</i> application covers Bucks, Chester, Delaware, Montgomery and Philadelphia counties in Pennsylvania, and Burlington, Camden, Gloucester and Mercer counties in New Jersey.</p>
+                                <p>This region contains an impressive freight transportation network consisting of highways, rail lines, ports, airports, and pipelines. There are also many related support facilities such as warehouses, manufacturing sites, rail yards, and truck stops.</p>
+                            </div>
+                            <div style="float:left;position:relative;margin-left:5px;width:40%;"><br/><img id="region" src="lib/images/regioninset.png" /></div>
+                            <div style="clear:both;"></div>
+                            <p>The Delaware Valley is strategically positioned in the middle of the densest population center in the United States. Over 100 million people live within a 500-mile radius of Philadelphia, representing a vast consumer base and making the region ideally situated as a manufacturing and distribution hub.</p>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-2">
+                            <p><b>Freight Planning: </b><i>PhillyFreightFinder</i> is the product of DVRPC’s continuing, comprehensive freight planning program.  This program enables carriers and shippers to participate in the metropolitan planning process and identifies freight transportation trends and needs in the region.</p>
+                            <p><i>PhillyFreightFinder</i> represents a true public-private partnership made possible by the members and friends of DVRPC’s freight advisory committee, the <a href="http://www.dvrpc.org/Freight/DVGMTF.htm">Delaware Valley Goods Movement Task Force</a>.  The Task Force’s Data Subcommittee has provided active oversight and guidance in designing and preparing the application.</p>
+                            <p>To learn more about the DVRPC's freight planning activities and freight advisory committee, please visit the <a href="http://www.dvrpc.org/Freight/">freight page of the DVRPC website</a>.</p>
+                            <p><i>PhillyFreightFinder </i>represents a highly collaborative undertaking made possible by the members and friends of the Delaware Valley Goods Movement Task Force. The Task Force is guided by three subcommittees: Planning, Shippers, and Data. The <i>PhillyFreightFinder</i> effort falls under the purview of the Data Subcommittee and represents a true <i>public-private partnership</i>.</p>
+                            <p><b>Geographic Information Systems: </b> Geographic Information Systems (GIS) support state, regional, county, and local planning. GIS allows planners and others to view and query spatial data, and perform advanced analysis to discover relationships, patterns, and trends.</p>
+                            <p>The <i>PhillyFreightFinder</i> mapping application is built on an Esri API platform and results from a collaborative effort between DVRPC’s Freight and GIS offices.</p>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-3">
+                            <B><Font color=red>PLEASE NOTE:</FONT></B>
+                            <FONT color=grey ><br>
+                            <p>The contents and information contained in this application will be updated on a regular basis as new information is available. However, at any one point in time, some data may not reflect the most current conditions. At the present time, this mapping tool only contains infrastructure and facilities within the official DVRPC region.</p>
+                            <p>The format and information on this map may be updated or changed at any time. This map does not expand the liability of DVRPC, state, local, and other agencies beyond existing law. </p>
+                            </FONT>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-4">
+                            <B>For more information, contact:</B><br>
+                            Ted Dahlburg <br>
+                            Manager, Office of Freight and Aviation Planning<br>
+                            Phone: 215.238.2844 <br>
+                            Email: <a href="mailto:tdahlburg@dvrpc.org ">tdahlburg@dvrpc.org </a><br>
+                            <br>
+                            Michael Ruane <br>
+                            Transportation Planner, Office of Freight and Aviation Planning<br>
+                            Phone: 215.238.2888<br>
+                            Email: <a href="mailto:mruane@dvrpc.org">mruane@dvrpc.org </a><br>
+                            <br>
+                            Delaware Valley Regional Planning Commission <br>
+                            190 N. Independence Mall West, 8th Floor <br>
+                            Philadelphia, PA 19106<br>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!-- Trucking Modal Window -->
+    <div class="modal fade" id="truckModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Trucking/Highway</h4>
+                </div>
+
+                <div class="modal-body">
+                     <ul id="aboutTabs" class="nav nav-tabs">
+                        <li class="active"><a href="#trkoverview" data-toggle="tab">Overview</a></li>
+                        <li><a href="#tabs-6" data-toggle="tab">Freeway</a></li>
+                        <li><a href="#tabs-7" data-toggle="tab">Truck Parking</a></li>
+                        <li><a href="#tabs-8" data-toggle="tab">NHS Connector</a></li>
+                        <li><a href="#tabs-9" data-toggle="tab">Freeway River Crossing</a></li>
+                    </ul>
+                    <div id="aboutTabsContent" class="tab-content" style="padding-top: 10px;">
+                        <div class="tab-pane fade active in" id="trkoverview">
+                            <p>Trucks are responsible for the majority of freight moved in the DVRPC region when measuring shipments by either weight or value. Additionally, the great majority of goods even if traveling by other modes, are ultimately taken by truck for final delivery to the point of sale.</p>
+                            <p><i>PhillyFreightFinder</i> highlights two different types of roadways integral to trucking operations:</p>
+                            <ul>
+                                <li>Freeways (including both Interstate and Limited Access Highways)</li>
+                                <li>NHS Connectors (i.e., last-mile/first-mile roads serving intermodal terminals)</li>
+                            </ul>
+                            <p>In addition to the roadway layers, the following point-specific locations are also provided:</p>
+                            <ul>
+                                <li>Truck parking facilities</li>
+                                <li>Freeway river crossings</li>
+                        </div>
+                        <div id="tabs-6" class="tab-pane fade in" >
+                            <p><img src="images/legend/truck.png" class="legicon"/>The region’s freeway system is made up of Interstate highways (both tolled and non-tolled) and limited access highways. All of these facilities are well-suited for use by commercial vehicles.</p>
+                            <p>The Interstate numbering scheme designates east-west highways as even numbers and north-south highways are assigned odd numbers. The DVRPC region is served by two principal two-digit Interstate Highways, I-76 and I-95.</p>
+                            <p>Auxiliary Interstate highways are circumferential, radial, or spur highways that principally serve urban areas. These types of Interstate highways are given three-digit route numbers, which consist of a single digit prefixed to the two-digit number of a nearby primary Interstate highway. There are a number of examples of three-digit auxiliary Interstate highways in the region including I-195, I-295, I-276, I-476, and I-676.</p>
+                            <p>In the DVRPC region, three agencies operate tolled highways that support and complement the Interstate system. The Pennsylvania Turnpike Commission operates the Pennsylvania Turnpike and Northeast Extension. The New Jersey Turnpike Authority operates the New Jersey Turnpike and the Garden State Expressway, and the South Jersey Transportation Authority operates the Atlantic City Expressway.</p>
+                            <p>Limited access highways connect collector roads to the Interstate system. U.S. highways with limited access sections in the region (i.e., one or more) include U.S. 1, 30, 202, and 422. State routes with limited access sections (i.e., one or more) include NJ 42, 55, and 90 and PA 13, 63, and 309.</p>
+                            <p><i>Notes about this layer:</i><br/>
+                            <i>A user may click on a freeway line at any point to display an information window with details about that particular segment of the highway. Once the information window is open, the segment of the freeway the information is related to will become highlighted in blue.</i></p>
+                            </p>
+                        </div>
+                        
+                        <div id="tabs-7" class="tab-pane fade in">
+                            <p><img src="images/legend/parking.png" class="legicon"/>Truck parking facilities are important components of the transportation and supply chain systems. Since a very high percentage of shipments are trucked for at least some portion of the total trip, especially for final delivery, the supply and availability of well-maintained overnight parking locations are essential. The region’s truck parking facilities form an interrelated system and can be broadly categorized as follows: private truck stops, service plazas, and rest areas.</p>
+                            <p>There are five private truck stops in the region. These facilities offer many amenities and services directly targeted to truck drivers. Some examples of these amenities include: restaurants, showers, laundry, truck scales, truck repair shops, and diesel fuel pumps.</p>
+                            <p>There are seven service plazas in the DVRPC region along the Pennsylvania and New Jersey turnpikes. Service plazas are principally designed to accommodate passenger vehicles, but they are also outfitted with special sections set aside for truck parking. The amenities they offer to truck drivers are limited; namely, food, fuel, and bathrooms.</p>
+                            <p>There are two rest areas in the DVRPC region, both on I-95 in Pennsylvania. Rest areas provide few amenities and are designed to serve as a place to take a short rest, not to stop overnight. Rest areas are relatively small in size and offer a limited number of truck parking spaces, usually fewer than ten.</p>
+                            <p>For more information about the regional truck parking facilities and on the Federal Hours-of-Service regulations, please see the DVRPC publication, <i><a href="http://www.dvrpc.org/asp/pubs/publicationabstract.asp?pub_id=09057">Regional Truck Parking Study (2011)</a></i>, at the following link:<a href="http://www.dvrpc.org/asp/pubs/publicationabstract.asp?pub_id=09057">http://www.dvrpc.org/asp/pubs/publicationabstract.asp?pub_id=09057</a></p>
+                            <p><i>Notes about this layer:</i><br/>
+                                <ul><li><i>Clicking on a truck parking icon in the map will activate an information window. As a user zooms in towards an individual truck parking facility, the land associated with it will also be highlighted. A user may click on the highlighted land to display the same information as clicking on the icon.</i></li></ul>   
+                            </p>
+                        </div>
+                        
+                        <div id="tabs-8" class="tab-pane fade in">
+                            <p><img src="images/legend/nhs.png" class="legicon"/>To access intermodal facilities, trucks must often use connector roads from major highways. These roads, which may be either state or locally owned, are referred to as National Highway System (NHS) connectors. (Note: There are categories for NHS freight connectors and NHS transit connectors, both of which may be referred to as intermodal connectors.) By being officially designated as an NHS connector, these roadways are eligible to receive federal NHS funding for improvement projects.</p>
+                            <p>While there are multiple criteria to be designated as an official NHS freight connector, the baseline metric is that the facility being served must generate 100 truck movements per day. The Delaware Valley has 11 officially designated NHS freight connectors, which total approximately 30 miles of roadways. Connectors serve three types of facilities in the Delaware Valley region: intermodal rail facility, port, and airport.</p>
+                            <p>In most cases, connectors serve one specific facility, such as the Philadelphia International Airport or the Joseph Balzano Marine Terminal in Camden. A connector may also serve multiple facilities, such as in South Philadelphia where a single connector serves the Packer Avenue Marine Terminal and the CSX Greenwich Intermodal Facility. While connectors may consist of a single roadway, two or more roadways forming one connector is common because multiple roads must be used to make the full connection to the gate of the freight facility.</p>
+                            <p><i>Notes about this layer:</i><br/>
+                                <ul>
+                                    <li><i>When viewing the entire region on the map, the 11 NHS Freight Connectors are depicted as points represented by the NHS connector icon. When viewing a specific NHS connector at a close-in range, the road(s) that makes up the connector will appear. Clicking on any section of the NHS connector will display the same information window as the connector icon.</i></li>
+                                </ul>
+                                </p>
+                        </div>
+                        
+                        <div id="tabs-9" class="tab-pane fade in">
+                            <p><img src="images/legend/bridge2.png" class="legicon"/>While there are countless bridges in the Delaware Valley, bridges on freeways that span major rivers (i.e., the Delaware and Schuylkill Rivers) are particularly essential to Interstate commerce. In total, 13 such bridges are identified in the <i>PhillyFreightFinder</i> tool. The region’s toll bridges that serve freeways are described below.</p>
+                            <p>Four prominent, tolled bridges owned by the Delaware River Port Authority (DRPA) connect Pennsylvania and New Jersey. The Walt Whitman and Ben Franklin bridges, both single-level suspension bridges, serve I-76 and I-676, respectively. The Betsy Ross Bridge is a continuous truss bridge that serves NJ 90. The Commodore Barry Bridge is a cantilever bridge that serves US 322.</p>
+                            <p>The Delaware River-Turnpike Toll Bridge is an arch-shaped suspended deck truss bridge that connects the New Jersey and Pennsylvania turnpikes. The Trenton-Morrisville Toll Bridge, is a twelve-span bridge serving US 1. The Scudders Falls Bridge is a girder bridge which serves I-95. This bridge is currently free, but a major renovation project will ultimately establish tolls.</p>
+                            <p><i>Notes about this layer:</i><br/>
+                                <ul>
+                                    <li><i>When viewing the entire region on the map, the 13 Freeway River Crossings are depicted as points represented by the Freeway River Crossing icon. Clicking on an individual Freeway River Crossing icon will activate a corresponding information window.</i></li>
+                                </ul>
+                                </p>
+                        </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="contactModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">How to Use</h4>
+                </div>
+                <div class="modal-body">
+                    <h5>Map Navigation</h5>
+                    <p style="font-size:12px;">Click-and-drag your mouse on the map to pan, or use your mouse wheel to zoom in/out. You may also use the slider bar and arrow controls in the upper left of the map to zoom in/out. Double-clicking on an area will also zoom in. If you hold down the Shift key and drag a <Font color="red">box </Font> on the map, it will zoom into the area drawn.</p>
+                    <p style="font-size:12px;">Just above the map window in the upper right portion of the screen, a search and locator box appears and reads, “Enter place or address.”  This permits the user to type in a specific geographic location (e.g., a city, town, or address).  After typing in the information and then clicking on the button to the right of the box, the map will automatically reorient to a center point associated with the specified location.
+                    </p>
+                    <p style="font-size:12px;">The <b>Zoom to Region</b> <img src="lib/images/zoom_button_dvrpcBndy.png" title="zoom to region" /> button in the upper left allows the user the ability to quickly return to the initial/default map extent, which is essentially the Delaware Valley region.</p>
+                    <p style="font-size:12px;">The map background can be customized using the pull down Basemaps bar in the upper right corner.  The map is initially set to “Imagery,” but other options such as “Streets” and “Terrain with Labels” backgrounds are also available.</p>
+                    <p style="font-size:12px;">Many of the individual features (e.g., a selected port facility) are represented by shaded polygons.  In the lower left hand side of the screen, underneath the application categories, users will find an Opacity scale which may be adjusted according to the desired levels of transparency of the polygons.</p>
+                    <h5>Categories, Layers, Features, and Attributes</h5>
+                    <p style="font-size:12px;">The menu to the left of the screen displays the seven major categories and 20 individual layers that are included in this application.  For all categories, a user can click on the information button next to the category for a detailed description.  Clicking on any of the check boxes will display the corresponding layer(s) on the map.  On the map, a user can click on any line or icon to display an information window which provides various attributes for that feature.</p>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="legendModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Map Legend</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Map Legend goes here...</p>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="loginModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="contact-form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label for="name">Username:</label>
+                                <input type="text" class="form-control" id="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Password:</label>
+                                <input type="password" class="form-control" id="password">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary pull-right" data-dismiss="modal">Login</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	<!--<div id='map'></div>-->
+	
+
+
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="lib/assets/typeahead.js/typeahead.min.js"></script> <!--https://github.com/twitter/typeahead.js/-->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="lib/jquery.tipTip.js"></script> 
+<script type="text/javascript" src="lib/jquery.checkall.js"></script>
+<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+<script type="text/javascript" src="lib/DVRPC_control/L.Base.Control.js"></script>
+<script type="text/javascript" src="lib/layers.js"></script>
+<script src="leaflet-providers.js"></script>
+<script src="lib/leaflet.viewcenter.js"></script>
+<script type='text/javascript'> 
+   /* $(document).ready(function(){
+        $("#check_all").on('click', function(){
+            $("#trucking input[type='checkbox']").prop('checked', true).change();
+            $(this).text('Uncheck all')
+        }, function() {
+            $("#trucking input[type='checkbox']").prop('checked', false).change();
+            $(this).text('Check all');
+        });
+    });
+*/
+    
+//    $('#truckmaster').checkAll('#trucking input:checkbox');
+  ////////////////////////////////////////////////
+//call map tile services and load basemap//////
+	$(document).ready(function() {
+            $('[rel=tooltip]').tooltip();
+            if (document.body.clientWidth <= 767) {
+                $('#sidebar').toggle();
+                $('a.toggle i').toggleClass('icon-chevron-left icon-chevron-right');
+            };
+        });
+    
+    
+    $(window).resize(function() {
+            $('.tt-dropdown-menu').css('max-height', $('#container').height()-$('.navbar').height()-20);
+        });
+
+    $('a.toggle').click(function() {
+            $('a.toggle i').toggleClass('icon-chevron-left icon-chevron-right');
+            $('#map').toggleClass('col-sm-9 col-lg-9 col-sm-12 col-lg-12');
+            $('#sidebar').toggle();
+            map.invalidateSize();
+            return false;
+        });
+    
+   ///LayerControls Expanded/////////////////////////
+
+    $('input:checkbox[name="LayerCont"]').on('change', function () {
+            var layers = [];
+            function sortByKey(array, key) {
+                return array.sort(function (a, b) {
+                    var x = a[key];
+                    var y = b[key];
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
+            }
+            if ($('#' + $(this).attr('id')).is(':checked')) {
+                $('input:checkbox[name="LayerCont"]').each(function () {
+                    // Remove all overlay layers
+                    map.removeLayer(window[$(this).attr('id')]);
+                    if ($('#' + $(this).attr('id')).is(':checked')) {
+                        // Add checked layers to array for sorting
+                        layers.push({
+                            'z-index': $(this).attr('z-index'),
+                            'layer': $(this)
+                        });
+                    }
+                });
+                // Sort layers array by z-index
+                var orderedLayers = sortByKey(layers, 'z-index');
+                // Loop through ordered layers array and add to map in correct order
+                $.each(orderedLayers, function () {
+                    map.addLayer(window[$(this)[0].layer[0].id]);
+                });
+            } else {
+                // Simply remove unchecked layers
+                map.removeLayer(window[$(this).attr('id')]);
+            }
+        }); 
+
+    //remove all layersingroup
+    
+
+	var EsriWorldImagery = L.tileLayer.provider('Esri.WorldImagery');
+
+	var map = new L.Map('map', {
+        layers: [EsriWorldImagery], 
+        minZoom: 9, 
+        zoomControl:false}).setView([40.018, -75.148],10);
+			var selectionLayer = new L.GeoJSON();
+
+			var baseLayers = {
+				"Esri WorldImagery": EsriWorldImagery,		
+				"Acetate Basemap": L.tileLayer.provider('Acetate.all'),
+
+			};
+			
+	L.control.basemaps(baseLayers).addTo(map);
+
+    var viewCenter = new L.Control.ViewCenter();
+    map.addControl(viewCenter);
+
+    var zoomcontrol = new L.Control.Zoom();
+    map.addControl(zoomcontrol);
+
+    /*define serach values*/
+    var portSearch = [];
+
+	/*if (document.body.clientWidth <= 767) {
+        var isCollapsed = true;
+        } else {
+            var isCollapsed = false;
+            map.addControl(scaleControl);
+        };*/
+
+</script>
+
+<!-- Load JS Files containing geoJSON feature data -->
+  <script type="text/javascript" src="lib/features/highway.js"></script> 
+  <script type="text/javascript" src="lib/features/freightrail.js"></script>
+  <script type="text/javascript" src="lib/features/rail.js"></script>
+  <script type="text/javascript" src="lib/features/portriver.js"></script>
+  <script type="text/javascript" src="lib/features/freightcenters.js"></script>
+  <script type="text/javascript" src="lib/features/airports.js"></script>
+     
+<script type='text/javascript'>	
+//////////////////////////////////////////////		
+//load polygon features////////////////////
+
+	//add airport polygons
+	//add commercial airports
+		var commairpoly = L.geoJson(commercialpolygon, {
+			style: {fillColor: "#639752", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightcommairpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		})
+	//add releiver airports
+		var relairpoly = L.geoJson(releiverpolygon, {
+			style: {fillColor: "#6EBD55", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightrelairpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});	
+
+	//add freight center polygons
+	//add intermediate FCs
+		var FCinterpoly = L.geoJson(FCIpolygon, {
+			style: {fillColor: "#F9AB90", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightFCinterpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});	
+	//add major FCs
+		var FCmajorpoly = L.geoJson(FCMapolygon, {
+			style: {fillColor: "#F26122", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightFCmajorpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});	
+	//add mega FCs
+		var FCmegapoly = L.geoJson(FCMepoly, {
+			style: {fillColor: "#C1332B", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightFCmegapoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+
+	//add port/waterways polygons
+	//add rivers
+		var river = L.geoJson(riverpoly, {
+			style: {fillColor: "#55B8DF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightriver,
+					dblclick: zoomToFeature
+				});
+                portSearch.push({
+                        value: layer.feature.properties.Name,
+                        tokens: [layer.feature.properties.Name],
+                        layer: "Port Terminals",
+                        id: L.stamp(layer),
+                        bounds: layer.getBounds()
+                    });
+			}
+		}).addTo(map);
+	//add port polygons
+		var portpoly = L.geoJson(portpolygons, {
+			style: {fillColor: "#29A0CF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightportpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+	//add anchorages
+		var anchoragepoly = L.geoJson(anchoragepolygon, {
+			style: {fillColor: "#0E76BC", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightanchoragepoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+
+	//add highway polygons		
+	//add truck parking polygons
+		var truckparkpoly = L.geoJson(trkparkpolygons, {
+			style: {fillColor: "#884C9E", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlighttruckparkingpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+
+	//add NHS polylines
+		var nhspoly = L.geoJson(nhspolygons, {
+			style: {weight:5, color:"#E8C3F5 ", opacity:1},	
+			onEachFeature: function (feature, layer){
+                layer.on({
+                    click: highlightNHSpoly,
+                    dblclick: zoomToFeature
+                });
+            }
+		});
+	//add freeways
+		var freeway = L.geoJson(freeways, {
+			style: function style(feature) {
+				switch (feature.properties.Type) {
+					case 'Limited Access Highway': return {color: "#C57AE0",weight:5, opacity:1};
+					case 'Interstate Highway': return {color: "#884C9E",weight:5, opacity:1};
+				}	
+			},
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightfreeways,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+		
+	//add rail polygons
+	//add intermodal
+		var intermodalpoly = L.geoJson(intermodalpolygon, {
+			style: {fillColor: "#FBA919", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightrailintermodalpoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});	
+	//add railyards
+		var railyardpoly = L.geoJson(railyardpolygon, {
+			style: {fillColor: "#FBA919", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},	
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightrailyardspoly,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+	//add rail lines
+		var railines = L.geoJson(freightrail, {
+			style: function style(feature) {
+				switch (feature.properties.Type) {
+					case 'Industrial Track \/ Shortline': return {color: "#FEEDDE",weight:5, opacity:.90};
+					case 'Secondary': return {color: "#FDCC8A",weight:5, opacity:.90};
+					case 'Interstate': return {color: "#FD8D3C",weight:5, opacity:.90};
+				}	
+			},
+			onEachFeature: function (feature, layer){
+				layer.on({
+					click: highlightraillines,
+					dblclick: zoomToFeature
+				});
+			}
+		});
+		
+////////////////////////////////////	
+//Load point layers/////////////////
+	
+	//Load Rail Point Layers
+	//intermodal yards
+		var imicon = L.icon({
+					iconUrl: 'intermodal.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var intermodalpt = L.geoJson(intermodalpoint, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: imicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightrailintermodal,
+						dblclick: zoomToPoint
+					});
+					}
+			});
+	//rail crossings
+		var xingicon = L.icon({
+						iconUrl: 'gradecrossing.png',
+						iconSize: [30, 30],
+						iconAnchor: [15, 15],
+						popupAnchor: [0, 15]
+				});
+		var gradexing = L.geoJson(gradecrossing, {
+					pointToLayer: function (feature, latlng) {
+						return L.marker(latlng, {icon: xingicon});
+						},
+					onEachFeature: function (feature, layer){
+						layer.on({
+							click: highlightrailcrossings,
+							dblclick: zoomToPoint
+						});
+						}
+			}).addTo(map);
+	//rail yard
+		var ryicon = L.icon({
+							iconUrl: 'railyard.png',
+							iconSize: [30, 30],
+							iconAnchor: [15, 15],
+							popupAnchor: [0, 15]
+					});
+		var railyardpt = L.geoJson(railyardpoint, {
+						pointToLayer: function (feature, latlng) {
+							return L.marker(latlng, {icon: ryicon});
+							},
+						onEachFeature: function (feature, layer){
+							layer.on({
+								click: highlightrailyardpt,
+								dblclick: zoomToPoint
+							});
+							}
+		});
+	//rail bridge
+		var rbicon = L.icon({
+							iconUrl: 'bridge1.png',
+							iconSize: [30, 30],
+							iconAnchor: [15, 15],
+							popupAnchor: [0, 15]
+					});
+		var railbridgept = L.geoJson(railbridge, {
+						pointToLayer: function (feature, latlng) {
+							return L.marker(latlng, {icon: rbicon});
+							},
+						onEachFeature: function (feature, layer){
+							layer.on({
+								click: highlightrailrivcrossing,
+								dblclick: zoomToPoint
+							});
+							}
+		}).addTo(map);		
+		
+	//load highway icon layers
+	//add NHS connectors
+		var NHSicon = L.icon({
+					iconUrl: 'nhs.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var nhs = L.geoJson(nhsConnectors, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: NHSicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightNHS,
+						dblclick: zoomToPoint
+					});
+					}
+			});
+	//add truck parking icons
+		var trckprkicon = L.icon({
+					iconUrl: 'parking.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var tppoints = L.geoJson(trkparkpoints, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: trckprkicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlighttruckparking,
+						dblclick: zoomToPoint
+					});
+					}
+			});
+
+
+
+	//add hwy bridge icons
+		var hwybricon = L.icon({
+					iconUrl: 'bridge2.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var hwyrivcrossing = L.geoJson(hwybridge, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: hwybricon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlighthwyrivcrossing,
+						dblclick: zoomToPoint
+					});
+					}
+			}).addTo(map);
+		
+	//load port/waterway icon layers
+	//add ports 
+		var prticon = L.icon({
+					iconUrl: 'ports.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var porticon = L.geoJson(portpoints, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: prticon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightporticon,
+						dblclick: zoomToPoint
+					});
+					}
+			});	
+	//add anchorages 
+		var anchicon = L.icon({
+					iconUrl: 'anchor.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var anchoricon = L.geoJson(anchoragepoint, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: anchicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightanchoricon,
+						dblclick: zoomToPoint
+					});
+					}
+			});	
+
+	//load freight center icon layers
+	//add intermediate FCs
+		var FCintericon = L.icon({
+					iconUrl: '17.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var FCinterpt = L.geoJson(FCIntpt, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: FCintericon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightFCinterpt,
+						dblclick: zoomToFC
+					});
+					}
+			});
+	//add major FCs
+		var FCmajoricon = L.icon({
+					iconUrl: '18.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var FCmajorpt = L.geoJson(FCMajpt, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: FCmajoricon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightFCmajorpt,
+						dblclick: zoomToFC
+					});
+					}
+			});
+	//add mega FCs
+		var FCmegaicon = L.icon({
+					iconUrl: '19.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var FCmegapt = L.geoJson(FCMegpt, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: FCmegaicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightFCmegapt,
+						dblclick: zoomToFC
+					});
+					}
+			});
+
+	//load airport icon layers
+	//add commercial airports
+		var commicon = L.icon({
+					iconUrl: 'airport1.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var commairpt = L.geoJson(commercialpoints, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: commicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightcommairpt,
+						dblclick: zoomToPoint
+					});
+					}
+			}).addTo(map);
+	//add releiver airports
+		var relvicon = L.icon({
+					iconUrl: 'airport2.png',
+					iconSize: [30, 30],
+					iconAnchor: [15, 15],
+					popupAnchor: [0, 15]
+			});
+		var relvairpt = L.geoJson(releiverpoints, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng, {icon: relvicon});
+					},
+				onEachFeature: function (feature, layer){
+					layer.on({
+						click: highlightrelvairpt,
+						dblclick: zoomToPoint
+					});
+					}
+			}).addTo(map);
+
+//Layer Groups 
+    var FCintergroup = new L.FeatureGroup([FCinterpt, FCinterpoly]).addTo(map);
+    var FCmajorgroup = new L.FeatureGroup([FCmajorpt, FCmajorpoly]).addTo(map);
+    var FCmegagroup = new L.FeatureGroup([FCmegapt, FCmegapoly]).addTo(map);
+    var FCenters = {
+                "Mega Center": FCmegagroup,
+                "Major Center": FCmajorgroup,
+                "Intermediate Center": FCintergroup
+            };
+
+	var railyardgroup = new L.FeatureGroup([railyardpt, railyardpoly]).addTo(map);
+	var intermodalgroup = new L.FeatureGroup([intermodalpt, intermodalpoly]).addTo(map);
+	var Rail = {
+				"Rail Line": railines,
+	            "Rail Yard": railyardgroup,
+	            "Intermodal Yard": intermodalgroup,
+	            "Class I Grade Crossing": gradexing,
+	            "Rail River Crossing": railbridgept
+			};
+
+	var portGroup = new L.FeatureGroup([porticon, portpoly]).addTo(map);
+	var anchorageGroup = new L.FeatureGroup([anchoricon, anchoragepoly]).addTo(map);
+	var Portwater = {
+				"Navigable River": river,
+	            "Port Terminal": portGroup,
+	            "Anchorage": anchorageGroup
+			};
+    var commGroup = new L.FeatureGroup([commairpt, commairpoly]).addTo(map);
+    var relGroup = new L.FeatureGroup([relvairpt, relairpoly]).addTo(map);
+    var airport = {
+                "Commercial": commGroup,
+                "Reliever": relGroup
+            };
+    var nhsgroup =new L.FeatureGroup([nhspoly, nhs]).addTo(map);
+    var trkparkgroup =new L.FeatureGroup([truckparkpoly, tppoints]).addTo(map);
+    var Highway = {
+                "Freeway": freeway,
+                "NHS Connector": nhsgroup,
+                "Truck Parking": trkparkgroup,
+                "Highway River Crossing": hwyrivcrossing  
+            };
+
+  (railines).addTo(map);
+  (freeway).addTo(map); 
+
+	
+////////////////////////////////////////
+///// Search Funcitonality  /////////////
+////////////////////////////////////
+// Highlight search box text on click
+            $("#searchbox").click(function () {
+                $(this).select();
+            });
+
+            // Typeahead search functionality
+            $(document).one("ajaxStop", function() {
+                //$("#loading").hide();
+                $("#searchbox").typeahead([{
+                    name: "GeoNames",
+                    remote: {
+                        url: "http://api.geonames.org/searchJSON?featureClass=P&maxRows=5&countryCode=US&name_startsWith=%QUERY",
+                       /* beforeSend: function(jqXhr, settings) {
+                            settings.url += "&east="+map.getBounds().getEast()+"&west="+map.getBounds().getWest()+"&north="+map.getBounds().getNorth()+"&south="+map.getBounds().getSouth();
+                        },*/
+                        filter: function(parsedResponse) {
+                            var dataset = [];
+                            for(i = 0; i < parsedResponse.geonames.length; i++) {
+                                dataset.push({
+                                    value: parsedResponse.geonames[i].name,
+                                    tokens: [parsedResponse.geonames[i].name],
+                                    layer: "GeoNames",
+                                    lat: parsedResponse.geonames[i].lat,
+                                    lng: parsedResponse.geonames[i].lng
+                                });
+                            }
+                            return dataset;
+                        }
+                    },
+                    minLength: 2,
+                    limit: 5,
+                    header: "<h4 class='typeahead-header'>GeoNames Places</h4>"
+                  }]).on("typeahead:selected", function (obj, datum) {
+                    if (datum.layer === "GeoNames") {
+                        map.setView([datum.lat, datum.lng], 14);
+                    };
+                    if ($("#navbar-collapse").height() > 50) {
+                        $("#navbar-collapse").collapse("hide");
+                    };
+                }).on("typeahead:initialized ", function () {
+                    $(".tt-dropdown-menu").css("max-height", 300);
+                }).on("typeahead:opened", function () {
+                    $(".navbar-collapse.in").css("max-height", $(document).height()-$(".navbar-header").height());
+                    $(".navbar-collapse.in").css("height", $(document).height()-$(".navbar-header").height());
+                }).on("typeahead:closed", function () {
+                    $(".navbar-collapse.in").css("max-height", "");
+                    $(".navbar-collapse.in").css("height", "");
+                });
+            });
+
+ // Placeholder hack for IE
+            if (navigator.appName == "Microsoft Internet Explorer") {
+                $("input").each( function () {
+                    if ($(this).val() == "" && $(this).attr("placeholder") != "") {
+                        $(this).val($(this).attr("placeholder"));
+                        $(this).focus(function () {
+                            if ($(this).val() == $(this).attr("placeholder")) $(this).val("");
+                        });
+                        $(this).blur(function () {
+                            if ($(this).val() == "") $(this).val($(this).attr("placeholder"));
+                        });
+                    }
+                });
+            }
+
+
+
+///////////////////////////////////////////	
+//Action on feature selections////////////
+		function zoomToPoint(e){
+		var layer= e.target;
+		var latLng = layer.getLatLng();
+			map.setView(latLng, 15);
+			}
+		function zoomToFC(e){
+		var layer= e.target;
+		var latLng = layer.getLatLng();
+			map.setView(latLng, 13);
+			}	
+	//Highway Features/////////////////////	
+	//Freeways
+		function highlightfreeways(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties  
+			var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                +"<tr><td style='width:200px;'><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "<br/>"
+                +"<i style='font-size:10px;color:#999999;'>Type: </i>" + props.Type + "<br/>"
+                +"<td><img src='images/shields/" + props.SHLD_ID + ".png' alt='Shield' height='50' align='right'></td><td style='width:10px;'></td></tr></table>"
+                +"<table><tr><td style='width:110px;height:15px;'></td><td style='text-align:center;width:40px;'><strong>" + props.DIR_1 + "</strong></td><td style='text-align:center;width:40px;'><strong>" + props.DIR_2 + "</strong></td></tr>"
+                +"<tr><td style='width:150px;'><strong style='font-size:12px;'><a title='Predominant lane count for designated segment' class='info-tipTip'>Capacity <span style='font-weight:normal;'>(lanes)</span></a>: </strong></td><td style='text-align:center;width:40px;'>" + props.CAP_1 + "</td><td style='text-align:center;width:40px;'>" + props.CAP_2 + "</td></tr>"
+                +"<tr><td style='width:150px;'><strong style='font-size:12px;'><a title='Average Annual Daily Traffic volume for truck traffic (FHWA Vehicle Classes 5-13)' class='info-tipTip'>Truck AADT</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.ACT_1A + "</td><td style='text-align:center;width:40px;'>" + props.ACT_2A + "</td></tr>"
+                +"<tr><td style='width:150px;'><strong style='font-size:12px;'>Truck share of <a title='Average Annual Daily Traffic' class='info-tipTip'>AADT</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.ACT_1B + "</td><td style='text-align:center;width:40px;'>" + props.ACT_2B + "</td></tr></table>"
+                +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.YEAR + " " + props.SOURCE + "</i><br/>"
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'hwycl';
+			document.getElementById('iconography').className = 'hwyicon';			
+		};
+	//Truck parking
+		function highlighttruckparking(e) {
+			resetHighlight();
+			highlightMarkers(e);
+            var layer = e.target;
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #cccccc;'>"
+                            +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                            +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                            +"<tr><td><i style='font-size:10px;color:#999999;'>Municipality(ies): </i>" + props.Township_s + "</td></tr></table>"
+                            +"<table><tr><td style='width:170px;height:15px;'></td></tr>"
+                            +"<tr><td style='width:170px;'><strong style='font-size:12px;'>Truck Spaces Available: </strong></td><td style='text-align:center;width:40px;'>" + props.Capacity + "</td></tr>"
+                            +"<tr><td style='width:170px;'><strong style='font-size:12px;'><a title='Truck space utilization determined by single overnight count' class='info-tipTip'>Truck Spaces Utilized</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.Activity_1 + "</td></tr></table>"
+                            +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                            +"<br/>"
+                            +"<p>More Information: " + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'hwycl';
+			document.getElementById('iconography').className = 'trkparkicon';			
+		};
+	//Truck parking poly
+		function highlighttruckparkingpoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #cccccc;'>"
+                            +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                            +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                            +"<tr><td><i style='font-size:10px;color:#999999;'>Municipality(ies): </i>" + props.Township_s + "</td></tr></table>"
+                            +"<table><tr><td style='width:170px;height:15px;'></td></tr>"
+                            +"<tr><td style='width:170px;'><strong style='font-size:12px;'>Truck Spaces Available: </strong></td><td style='text-align:center;width:40px;'>" + props.Capacity + "</td></tr>"
+                            +"<tr><td style='width:170px;'><strong style='font-size:12px;'><a title='Truck space utilization determined by single overnight count' class='info-tipTip'>Truck Spaces Utilized</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.Activity_1 + "</td></tr></table>"
+                            +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                            +"<br/>"
+                            +"<p>More Information: " + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'hwycl';
+			document.getElementById('iconography').className = 'trkparkicon';			
+		};
+	//NHS Connectors
+		function highlightNHS(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Facility Served: </i>" + props.Fac_Served + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
+                        +"<table><tr><td style='width:160px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:160px;'><strong style='font-size:12px;'><a title='Predominant lane count for designated segment' class='info-tipTip'>Lanes per direction</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.Cap_1 + "</td></tr>"
+                        +"<tr><td style='width:160px;'><strong style='font-size:12px;'><a title='Average Annual Daily Traffic' class='info-tipTip'>AADT</a>: </strong></td><td style='text-align:center;width:40px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i><br/>"
+                        +"<br/><p>" + props.Profile + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'hwycl';
+			document.getElementById('iconography').className = 'nhsicon';			
+		};
+	//NHS Connector poly
+		function highlightNHSpoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name_1 + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Facility Served: </i>" + props.Fac_Served + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
+                        +"</table>"
+                        +"<table><tr><td style='width:160px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:160px;'><strong style='font-size:12px;'><a title='Predominant lane count for designated segment' class='info-tipTip'>Lanes per direction</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.Cap_1 + "</td></tr>"
+                        +"<tr><td style='width:160px;'><strong style='font-size:12px;'><a title='Average Annual Daily Traffic' class='info-tipTip'>AADT</a>: </strong></td><td style='text-align:center;width:40px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i><br/>"
+                        +"<br/><p>" + props.Profile + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'hwycl';
+			document.getElementById('iconography').className = 'nhsicon';			
+		};
+	//HWY River Crossings
+		function highlighthwyrivcrossing(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Highway: </i>" + props.Line + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Tolled: </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Type_1 + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Connecting Municiaplity(ies): </i>" + props.Town_1 + " - " + props.Town_2 + "</td></tr></table>"
+                    +"<table><tr><td style='width:190px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'><a title='Total count of lanes, both directions.' class='info-tipTip'>Travel Lanes</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_1 + "</td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'>Vertical Restriction <span style='font-weight:normal;'>(ft)</span>: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_2 + "</td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'><a title='Average Annual Daily Traffic' class='info-tipTip'>AADT</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Act_1 + "</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'hwycl';
+			document.getElementById('iconography').className = 'hwyrivicon';			
+		};
+		
+	//Rail Features//////////////////
+	//Rail Lines
+		function highlightraillines(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator + "</td></tr>"
+                    //+"<tr><td><i style='font-size:10px;color:#999999;'>Length (mi): </i>${MILES}</td></tr></table>"
+                    +"<table><tr><td style='width:100%;height:15px;'></td></tr>"
+                    +"<tr><td style='width:160px;padding-right:5px;'><strong style='font-size:12px;'><a title='Predominant count of through tracks on designated segment' class='info-tipTip'>Number of Tracks</a>: </strong></td><td style='text-align:right;width:120px;'>" + props.Cap1 + "</td></tr>"
+                    +"<tr><td style='width:180px;padding-right:5px;'><strong style='font-size:12px;'><a title='Ability to operate double stack trains. Double stack is a technology allowing intermodal containers to be stack two high on train cars.' class='info-tipTip'>Double Stack Clearance</a>: </strong></td><td style='text-align:right;width:120px;'>" + props.Cap2 + "</td></tr>"
+                    +"<tr><td style='width:160px;padding-right:5px;'><strong style='font-size:12px;'><a title='Capacity to operate 286,000 pound rail cars on designated segment' class='info-tipTip'>286k Capacity</a>: </strong></td><td style='text-align:right;width:160px;'>" + props.Cap3 + "</td></tr>"
+                    +"<tr><td style='width:160px;padding-right:5px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:right;width:120px;'>n/a</td></tr></table><i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railicon';
+		};
+	//Rail Yards
+		function highlightrailyardpt(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Connecting Line: </i>" + props.Rail_Line + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                    +"<table><tr><td style='width:80px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:120px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.GIS_Acres + "</td></tr>"
+                    +"<tr><td style='width:120px;'><strong style='font-size:12px;'>Annual Car Count: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railyardicon';
+		};
+	//Rail Yards poly
+		function highlightrailyardspoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Connecting Line: </i>" + props.Rail_Line + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                    +"<table><tr><td style='width:80px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:120px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.GIS_Acres + "</td></tr>"
+                    +"<tr><td style='width:120px;'><strong style='font-size:12px;'>Annual Car Count: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railyardicon';
+		};
+	//Rail Crossings
+		function highlightrailcrossings(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #cccccc;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                    // +"<tr><td><i style='font-size:10px;color:#999999;'>Cargo: </i>{Cargo}</td></tr></table>"
+                    +"<table><tr><td style='width:140px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:140px;'><strong style='font-size:12px;'><a title='Count of active tracks at grade grossing' class='info-tipTip'>Tracks at Crossing</a>: </strong></td><td style='text-align:center;width:40px;'>" + props.Cap + "</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source_1 + " </i>"
+                    +"<p>" + props.Report + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railcrossicon';
+		};
+	//Rail Intermodal Poly
+		function highlightrailintermodalpoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name_1 + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'><tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                    +"<table><tr><td style='width:80px;height:15px;'></td></tr><tr><td style='width:80px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.GIS_Acres_1 + "</td></tr>"
+                    +"<tr><td style='width:80px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i><p>Related Freight Center: " + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railintericon';
+		};
+	//Rail Intermodal Point
+		function highlightrailintermodal(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'><tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                    +"<table><tr><td style='width:80px;height:15px;'></td></tr><tr><td style='width:80px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.GIS_Acres + "</td></tr>"
+                    +"<tr><td style='width:80px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i><p>Related Freight Center: " + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railintericon';
+		};
+	//Rail River Crossing
+		function highlightrailrivcrossing(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Rail Line: </i>" + props.Line + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator(s): </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Type_1 + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Connecting Municiaplity(ies): </i>" + props.Town_1 + " - " + props.Town_2 + "</td></tr></table>"
+                    +"<table><tr><td style='width:190px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'>Width <span style='font-weight:normal;'>(tracks)</span>: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_1 + "</td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'><a title='Ability to operate double stack trains. Double stack is a technology allowing intermodal containers to be stack two high on train cars.' class='info-tipTip'>Double Stack Clearance</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_2 + "</td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'><a title='Capacity to operate 286,000 pound rail cars on designated segment' class='info-tipTip'>286k Capacity</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_3 + "</td></tr>"
+                    +"<tr><td style='width:190px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>" + props.Act_1 + "</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'railcl';	
+			document.getElementById('iconography').className = 'railrivicon';
+		};
+		
+	//Ports/Waterways Features//////
+	//Port Poly	
+		function highlightportpoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+			var props = layer.feature.properties
+            var feattype = '<p>'+ props.Type + ' Terminal</p>';
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<div id='baseInfo'>"
+                        +"<div class='datafield'>" + props.Owner + "</div><div class='labelfield'>Owner</div>"
+                        +"<div class='datafield'>" + props.Operator_s + "</div><div class='labelfield'>Operator(s)</div>"
+                        +"<div class='datafield'>" + props.Township + "</div><div class='labelfield'>Municipal Location</div>"
+                        +"</div><!--close baseInfo-->"
+                        +"<div class='infoDivider'></div>"
+                        +"<div id='indactorInfo'>"
+                        +"<ul class='nav nav-tabs'><!--tabs for indicators-->"
+                        +"<li class='active'><a href='#portCap' data-toggle='tab'>Capacity</a></li>"
+                        +"<li><a href='#portAct' data-toggle='tab'>Activity</a></li></ul>"
+                        +"<div id='indicator' class='tab-content'><!--tab panes-->"
+                        +"<div class='tab-pane active' id='portCap' style='height:125px;'>"
+                                +"<table class='table table-hover'>"
+                                +"<tr class='active'><td><strong>Qty of Berths: </strong></td><td>" + props.Cap_1 + "</td></tr>"
+                                +"<tr><td><strong>Total Berth Length: </strong></td><td>" + props.Cap_2 + " linear ft</td></tr>"
+                                +"<tr class='active'><td><strong>Berth Depth <span style='font-weight:normal;'><a title='Mean Low Water' data-toggle='tooltip'>(MLW)</a></span>: </strong></td><td>" + props.Cap_3 + " feet</td></tr>"
+                                +"<tr><td><strong>Available Cranes: </strong></td><td><a title='" + props.Cap_4 + "' data-toggle='tooltip'>#</a></td></tr>"
+                                +"<tr class='active'><td><strong>Warehouse Space: </strong></td><td>" + props.Cap_5 + "</td></tr></table>"
+                        +"</div>"
+                        +"<div class='tab-pane' id='portAct' style='height:125px;'>"
+                                +"<table class='table table-hover'>"
+                                +"<tr class='active'><td class='item'><strong>2012 Ship Arrivals: </strong></td><td>" + props.Act_1 + "</td><td>o</td></tr>"
+                                +"<tr><td class='item'><strong>Yr/Yr change: </strong></td><td>n/a</td><td>o</td></tr>"
+                                +"<tr class='active'><td class='item'><strong>Cargo handled: </strong></td><td colspan='2' style='line-height:1!important;'>" + props.Cargo + "</td></tr></table>"
+                        +"</div></div>"
+                        +"<div class='labelfield source'>" + props.Source + "</div></div>"
+                        //+"<div style='height:34px;'><a href='http://www.dvrpc.org/webmaps/PhillyFreightFinder/reports/FC/FC34.pdf' target='_blank' style='line-height:34px;float:left;'><div class='pdf'></div>Related Report</a></span></div></div>"
+			document.getElementById('infoheader').innerHTML = info;
+            document.getElementById('featureName').innerHTML = feattype;
+			document.getElementById('info').innerHTML = content;
+            document.getElementById('featureName').className = 'portFN';    
+			document.getElementById('infoheader').className = 'portcl';	
+			document.getElementById('iconography').className = 'porticon';
+		};	
+	//Port Point
+		function highlightporticon(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+            var content = "<table style='border-bottom:1px solid #cccccc;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Type + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Operator: </i>" + props.Operator_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                    +"<table><tr><td style='width:100px;padding-right:10px;'><strong style='font-size:12px;'>Qty of Berths: </strong></td><td style='width:140px;'>" + props.Cap_1 + "</td></tr>"
+                    +"<tr><td style='width:120px;padding-right:10px;'><strong style='font-size:12px;'>Total Berth Length: </strong></td><td style='width:140px;'>" + props.Cap_2 + " linear ft</td></tr>"
+                    +"<tr><td style='width:120px;padding-right:10px;'><strong style='font-size:12px;'>Berth Depth <span style='font-weight:normal;'><a title='Mean Low Water' class='info-tipTip'>(MLW)</a></span>: </strong></td><td style='width:140px;'>" + props.Cap_3 + " feet</td></tr>"
+                    +"<tr><td style='width:120px;padding-right:10px;'><strong style='font-size:12px;'>Available Cranes: </strong></td><td style='width:140px;'>" + props.Cap_4 + "</td></tr>"
+                    +"<tr><td style='width:120px;padding-right:10px;'><strong style='font-size:12px;'>Warehouse Space: </strong></td><td style='width:140px;'>" + props.Cap_5 + "</td></tr>"
+                    +"<tr><td style='width:120px;padding-right:10px;'><strong style='font-size:12px;'>Total Acreage: </strong></td><td style='width:140px;'>" + props.Acres + "</td></tr>"
+                    +"<tr><td style='width:120px;padding-right:10px;'><strong style='font-size:12px;'>2012 Ship Arrivals: </strong></td><td style='width:140px;'>" + props.Act_1 + "</td></tr></table>"
+                    +"<strong style='font-size:12px;padding-right:10px;'>Cargo Handled: </strong>   " + props.Cargo + "<br/>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                    +"<p>Related Freight Center: " + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'portcl';	
+			document.getElementById('iconography').className = 'porticon';
+		};	
+	//Anchorage Poly	
+		function highlightanchoragepoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Adjacent Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
+                    //+"<tr><td><i style='font-size:10px;color:#999999;'>Start Point: </i>" + props.Start + "</td></tr>"
+                    //+"<tr><td><i style='font-size:10px;color:#999999;'>End Point: </i>" + props.End + "</td></tr>"
+                    +"<table><tr><td style='width:180px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:180px;'><strong style='font-size:12px;'>Annual Ships (" + props.YEAR + "): </strong></td><td style='text-align:center;width:40px;'>" + props.Act_1 + "</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'portcl';	
+			document.getElementById('iconography').className = 'anchicon';
+		};
+	//Anchorage Point
+		function highlightanchoricon(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+            var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Adjacent Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
+                    //+"<tr><td><i style='font-size:10px;color:#999999;'>Start Point: </i>" + props.Start + "</td></tr>"
+                    //+"<tr><td><i style='font-size:10px;color:#999999;'>End Point: </i>" + props.End + "</td></tr>"
+                    +"<table><tr><td style='width:180px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:180px;'><strong style='font-size:12px;'>Annual Ships (" + props.YEAR + "): </strong></td><td style='text-align:center;width:40px;'>" + props.Act_1 + "</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'portcl';	
+			document.getElementById('iconography').className = 'anchicon';
+		};
+	//River Poly	
+		function highlightriver(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+			var props = layer.feature.properties
+            var info = '<h1>' + props.NAME + '</h1>';
+			var content = "<table style='border-bottom:1px solid#999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Adjacent Municiaplity(ies): </i>" + props.Township_s + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'><a title='Nautical miles from Atlantic Ocean' class='info-tipTip'>Start Point</a>: </i>" + props.Start + "</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'><a title='Nautical miles from Atlantic Ocean' class='info-tipTip'>End Point</a>: </i>" + props.End + "</td></tr></table>"
+                    +"<table><tr><td style='width:150px;'><strong style='font-size:12px;'>Channel Width <span style='font-weight:normal;'>(ft)</span>: </strong></td><td style='text-align:center;width:80px;'>" + props.Cap_1 + "</td></tr>"
+                    +"<tr><td style='width:180px;'><strong style='font-size:12px;'>Channel Depth <span style='font-weight:normal;'><a title='Mean Lower Low Water' class='info-tipTip'>(MLLW in ft)</a></span>: </strong></td><td style='text-align:center;width:80px;'>" + props.Cap_2 + "</td></tr>"
+                    +"<tr><td style='width:180px;'><strong style='font-size:12px;'><a title='Approved vertical clearance within navigable channel' class='info-tipTip'>Maximum Air Draft <span style='font-weight:normal;'>(ft)</span></a>: </strong></td><td style='text-align:center;width:80px;'>" + props.Cap_3 + " </td></tr>"
+                    +"<tr><td style='width:180px;'><strong style='font-size:12px;'>Annual Activity: </strong></td><td style='text-align:center;width:80px;'>n/a</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'portcl';	
+			document.getElementById('iconography').className = 'rivericon';
+		};			
+		
+	//Freight Centure features///////////
+	//Intermediate Poly
+		function highlightFCinterpoly(e) {
+				resetHighlight();
+				var layer = e.target;
+				layer.setStyle({
+					weight: 6,color:"#00ffff"
+				});
+				var props = layer.feature.properties
+                var info = '<h1>' + props.Name + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
+                        +"<table><tr><td style='width:60px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.Acres + "</td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        +"<p>" + props.REPORT + "</p>";
+				document.getElementById('infoheader').innerHTML = info;
+				document.getElementById('info').innerHTML = content;
+				document.getElementById('infoheader').className = 'frtctrintcl';	
+				document.getElementById('iconography').className = 'fcintericon';
+			};
+	//Intermediate point
+		function highlightFCinterpt(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+			var props = layer.feature.properties
+            var info = '<h1>' + props.Name + '</h1>';
+			var content = "<table style='border-bottom:1px solid #999999;'>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
+                    +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
+                    +"<table><tr><td style='width:60px;height:15px;'></td></tr>"
+                    +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.Acres + "</td></tr>"
+                    +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>" + props.Act_1 + "</td></tr></table>"
+                    +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                    +"<p>" + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'frtctrintcl';	
+			document.getElementById('iconography').className = 'fcintericon';
+		};
+	//Major Poly
+		function highlightFCmajorpoly(e) {
+				resetHighlight();
+				var layer = e.target;
+				layer.setStyle({
+					weight: 6,color:"#00ffff"
+				});
+                var props = layer.feature.properties
+				var info = '<h1>' + props.Name + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
+                        +"<table><tr><td style='width:60px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.Acres + "</td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        +"<p>" + props.REPORT + "</p>";
+				document.getElementById('infoheader').innerHTML = info;
+				document.getElementById('info').innerHTML = content;
+				document.getElementById('infoheader').className = 'frtctrmajcl';	
+				document.getElementById('iconography').className = 'fcmajoricon';
+			};	
+	//Major point
+		function highlightFCmajorpt(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+            var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
+                        +"<table><tr><td style='width:60px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.Acres + "</td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        +"<p>" + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'frtctrmajcl';	
+			document.getElementById('iconography').className = 'fcmajoricon';
+		};
+	//Mega Poly
+		function highlightFCmegapoly(e) {
+			resetHighlight();
+			var layer = e.target;
+			layer.setStyle({
+				weight: 6,color:"#00ffff"
+			});
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
+                        +"<table><tr><td style='width:60px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.Acres + "</td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        +"<p>" + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'frtctrmegcl';	
+			document.getElementById('iconography').className = 'fcmegicon';
+		};			
+	//Mega point
+		function highlightFCmegapt(e) {
+			resetHighlight();
+            highlightMarkers(e);
+			var layer = e.target;
+            var props = layer.feature.properties
+			var info = '<h1>' + props.Name + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
+                        +"<table><tr><td style='width:60px;height:15px;'></td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Acres: </strong></td><td style='text-align:center;width:100px;'>" + props.Acres + "</td></tr>"
+                        +"<tr><td style='width:60px;'><strong style='font-size:12px;'>Activity: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        +"<p>" + props.REPORT + "</p>";
+			document.getElementById('infoheader').innerHTML = info;
+			document.getElementById('info').innerHTML = content;
+			document.getElementById('infoheader').className = 'frtctrmegcl';	
+			document.getElementById('iconography').className = 'fcmegicon';
+		};
+
+	//Airport features///////////
+	//Commercial Poly
+		function highlightcommairpoly(e) {
+				resetHighlight();
+				var layer = e.target;
+				layer.setStyle({
+					weight: 6,color:"#00ffff"
+				});
+                var props = layer.feature.properties
+				var info = '<h1>(' + props.NAVID + ') ' + props.Name + '</h1>';
+				var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                        +"<table><tr><td style='width:100%;height:15px;'></td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_1 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway Length(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_2 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Total Acreage: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_3 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'><a title='Count of annual takeoffs and landings' class='info-tipTip'>Annual Operations</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Activity_1 + "</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        //+"<p>More Information: " + props.REPORT + "</p>"
+                        +"<p>Related Freight Center: " + props.FC_REPORT + "</p>";
+				document.getElementById('infoheader').innerHTML = info;
+				document.getElementById('info').innerHTML = content;
+				document.getElementById('infoheader').className = 'commaircl';	
+				document.getElementById('iconography').className = 'commercialicon';
+			};
+	//Commercial point
+		function highlightcommairpt(e) {
+    			resetHighlight();
+                highlightMarkers(e);
+    			var layer = e.target;
+    			var props = layer.feature.properties
+                var info = '<h1>(' + props.NAVID + ") " +props.Name_1 + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                        +"<table><tr><td style='width:100%;height:15px;'></td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_1 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway Length(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_2 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Total Acreage: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_3 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'><a title='Count of annual takeoffs and landings' class='info-tipTip'>Annual Operations</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Activity_1 + "</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        //+"<p>More Information: " + props.REPORT + "</p>"
+                        +"<p>Related Freight Center: " + props.FC_REPORT + "</p>";
+    			document.getElementById('infoheader').innerHTML = info;
+    			document.getElementById('info').innerHTML = content;
+    			document.getElementById('infoheader').className = 'commaircl';	
+    			document.getElementById('iconography').className = 'commercialicon';
+		};
+	//releiver Poly
+		function highlightrelairpoly(e) {
+				resetHighlight();
+				var layer = e.target;
+				layer.setStyle({
+					weight: 6,color:"#00ffff"
+				});
+				var props = layer.feature.properties
+                var info = '<h1>(' + props.NAVID + ") " +props.Name + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                        +"<table><tr><td style='width:100%;height:15px;'></td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_1 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway Length(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_2 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Total Acreage: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_3 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'><a title='Count of annual takeoffs and landings' class='info-tipTip'>Annual Operations</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Activity_1 + "</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        //+"<p>More Information: " + props.REPORT + "</p>"
+                        +"<p>Related Freight Center: " + props.FC_REPORT + "</p>";
+				document.getElementById('infoheader').innerHTML = info;
+				document.getElementById('info').innerHTML = content;
+				document.getElementById('infoheader').className = 'relaircl';
+				document.getElementById('iconography').className = 'releivericon';
+			};
+	//releiver point
+		function highlightrelvairpt(e) {
+    			resetHighlight();
+                highlightMarkers(e);
+    			var layer = e.target;
+    			var props = layer.feature.properties
+                var info = '<h1>(' + props.NAVID + ") " +props.Name_1 + '</h1>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township + "</td></tr></table>"
+                        +"<table><tr><td style='width:100%;height:15px;'></td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_1 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Runway Length(s): </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_2 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Total Acreage: </strong></td><td style='text-align:center;width:100px;'>" + props.Cap_3 + "</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'><a title='Count of annual takeoffs and landings' class='info-tipTip'>Annual Operations</a>: </strong></td><td style='text-align:center;width:100px;'>" + props.Activity_1 + "</td></tr></table>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: " + props.Source + " </i>"
+                        //+"<p>More Information: " + props.REPORT + "</p>"
+                        +"<p>Related Freight Center: " + props.FC_REPORT + "</p>";
+    			document.getElementById('infoheader').innerHTML = info;
+    			document.getElementById('info').innerHTML = content;
+    			document.getElementById('infoheader').className = 'relaircl';	
+    			document.getElementById('iconography').className = 'releivericon';
+		};	
+		
+//zoom to polygon feature
+	function zoomToFeature(e) {
+			map.fitBounds(e.target.getBounds());
+			};
+			
+	
+//reset all layer styles before highlight (LONG HANDED--NEED TO REVISE)		
+		function resetHighlight(){
+			//reset poly features individually
+			railines.setStyle(function (feature) {
+				switch (feature.properties.Type) {
+					case 'Industrial Track \/ Shortline': return {color: "#FEEDDE",weight:5, opacity:.90};
+					case 'Secondary': return {color: "#FDCC8A",weight:5, opacity:.90};
+					case 'Interstate': return {color: "#FD8D3C",weight:5, opacity:.90};
+				}	}),
+			railyardpoly.setStyle({fillColor: "#FBA919", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			intermodalpoly.setStyle({fillColor: "#FBA919", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			nhspoly.setStyle({weight:5, color:"#E8C3F5 ", opacity:1}),
+			freeway.setStyle(function (feature) {
+				switch (feature.properties.Type){
+					case 'Limited Access Highway': return {color: "#C57AE0",weight:5, opacity:1};
+					case 'Interstate Highway': return {color: "#884C9E",weight:5, opacity:1};
+				}	 }),
+			truckparkpoly.setStyle({fillColor: "#884C9E", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			river.setStyle({fillColor: "#55B8DF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
+			portpoly.setStyle({fillColor: "#29A0CF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			anchoragepoly.setStyle({fillColor: "#0E76BC", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
+			FCinterpoly.setStyle({fillColor: "#F9AB90", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			FCmajorpoly.setStyle({fillColor: "#F26122", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			FCmegapoly.setStyle({fillColor: "#C1332B", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			commairpoly.setStyle({fillColor: "#639752", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			relairpoly.setStyle({fillColor: "#6EBD55", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+            resetIconhighlights();
+		}
+
+
+        function highlightMarkers(e){
+            var layer = e.target;
+            var iconElem = L.DomUtil.get(layer._icon);
+            iconElem.className += ' ' + 'highlightMarker';
+        };
+
+        function resetIconhighlights(){
+           $('img').removeClass('highlightMarker');
+        }
+
+// Clear the tooltip and clear highlights when map is clicked		
+		map.on('click',function(e){
+			resetHighlight();
+			document.getElementById('info').innerHTML = '';
+            document.getElementById('featureName').innerHTML = '';
+			document.getElementById('infoheader').innerHTML = '<h1>Click feature to view details</h1>';
+			document.getElementById('infoheader').className = '';
+            document.getElementById('featureName').className = '';
+			document.getElementById('iconography').className = '';
+			
+		});
+
+
+
+
+</script>
+</body>
+</html>
