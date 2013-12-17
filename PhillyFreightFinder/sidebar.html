@@ -165,7 +165,7 @@
     </div>
     <!--Sidebar-->
        <div class="row pffcontent" id="container">
-            <div class="col-sm-3 col-lg-3" id="sidebar" style="padding: 10px; overflow: auto;">
+            <div class="col-sm-3 col-lg-3" id="sidebar" style="padding: 10px; overflow: auto; background-color:#bbbbbb;">
 
                 <div class="tab-content" style="padding-top: 10px;">
                         <div class="panel-group">
@@ -232,7 +232,7 @@
                                             <input type="checkbox" name="LayerCont" id="gradexing" class="rails" z-index="14" checked>
                                             <label class="gradex" for="gradexing">Class I Grade Crossing</label>
                                         </div>
-                                        <div class="checkbox">
+                                        <div class="checkbox last">
                                             <input type="checkbox" name="LayerCont" id="railbridgept" class="rails" z-index="13" checked>
                                             <label class="railbrdg" for="railbridgept">Rail River Crossing</label>
                                         </div>
@@ -263,7 +263,7 @@
                                             <input type="checkbox" name="LayerCont" id="portGroup" class="water" z-index="5" checked>
                                             <label class="portic" for="portGroup">Port Terminal</label>
                                         </div>
-                                        <div class="checkbox">
+                                        <div class="checkbox last">
                                             <input type="checkbox" name="LayerCont" id="anchorageGroup" class="water" z-index="6" checked>
                                             <label class="anchic" for="anchorageGroup">Anchorage</label>
                                         </div>
@@ -579,6 +579,13 @@
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
 
+           //load map
+            map = L.map("map", {
+                minZoom: 9,
+                zoomControl:false,
+                layers: [Esri_WorldImagery]
+            });
+
             // Data Layers
             //define highway layers      
             //define truck parking polygons
@@ -603,7 +610,7 @@
                 });
             //define truck parking points  
                 var trckprkicon = L.icon({
-                            iconUrl: 'parking.png',
+                            iconUrl: 'lib/images/parking.png',
                             iconSize: [30, 30],
                             iconAnchor: [15, 15],
                             popupAnchor: [0, 15]
@@ -624,7 +631,7 @@
                 });
             //define hwy bridge icons
                 var hwybricon = L.icon({
-                            iconUrl: 'bridge2.png',
+                            iconUrl: 'lib/images/bridge2.png',
                             iconSize: [30, 30],
                             iconAnchor: [15, 15],
                             popupAnchor: [0, 15]
@@ -673,7 +680,7 @@
                 });
             //define NHS points
                 var NHSicon = L.icon({
-                            iconUrl: 'nhs.png',
+                            iconUrl: 'lib/images/nhs.png',
                             iconSize: [30, 30],
                             iconAnchor: [15, 15],
                             popupAnchor: [0, 15]
@@ -766,7 +773,7 @@
                 railyardpoly.addData(data);
             });
             var ryicon = L.icon({
-                            iconUrl: 'railyard.png',
+                            iconUrl: 'lib/images/railyard.png',
                             iconSize: [30, 30],
                             iconAnchor: [15, 15],
                             popupAnchor: [0, 15]
@@ -806,7 +813,7 @@
                     intermodalpoly.addData(data);
                 });
                 var imicon = L.icon({
-                    iconUrl: 'intermodal.png',
+                    iconUrl: 'lib/images/intermodal.png',
                     iconSize: [30, 30],
                     iconAnchor: [15, 15],
                     popupAnchor: [0, 15]
@@ -827,7 +834,7 @@
                 });
                 //define grade crossings
                 var xingicon = L.icon({
-                        iconUrl: 'gradecrossing.png',
+                        iconUrl: 'lib/images/gradecrossing.png',
                         iconSize: [30, 30],
                         iconAnchor: [15, 15],
                         popupAnchor: [0, 15]
@@ -856,7 +863,7 @@
                 });
                 //define rail bridge
                 var rbicon = L.icon({
-                            iconUrl: 'bridge1.png',
+                            iconUrl: 'lib/images/bridge1.png',
                             iconSize: [30, 30],
                             iconAnchor: [15, 15],
                             popupAnchor: [0, 15]
@@ -900,7 +907,7 @@
                                 bounds: layer.getBounds()
                             });
                     }
-                })
+                });
                 $.getJSON("data/river.geojson", function (data) {
                     river.addData(data);
                 });
@@ -925,7 +932,7 @@
                     portpoly.addData(data);
                 });
                 var prticon = L.icon({
-                    iconUrl: 'ports.png',
+                    iconUrl: 'lib/images/ports.png',
                     iconSize: [30, 30],
                     iconAnchor: [15, 15],
                     popupAnchor: [0, 15]
@@ -965,7 +972,7 @@
                     anchoragepoly.addData(data);
                 });
                 var anchicon = L.icon({
-                    iconUrl: 'anchor.png',
+                    iconUrl: 'lib/images/anchor.png',
                     iconSize: [30, 30],
                     iconAnchor: [15, 15],
                     popupAnchor: [0, 15]
@@ -1014,12 +1021,8 @@
             });           
 
 
-            map = L.map("map", {
-                minZoom: 9,
-                zoomControl:false,
-                layers: [Esri_WorldImagery]
-            });
             
+            //map.setMaxBounds(counties.getBounds());
             //add layers in groups by order
 
             (counties).setZIndex(0).addTo(map);
@@ -1324,7 +1327,7 @@
                             map.addLayer(river);
                             $("#river").prop("checked", true);
                         };
-                        map.setView([datum.lat, datum.lng], 17);
+                        map.fitBounds(datum.bounds);
                         if (map._layers[datum.id]) {
                             highlightriver(map._layers[datum.id]);
                         }; 
@@ -1334,7 +1337,7 @@
                             map.addLayer(portGroup);
                             $("#portGroup").prop("checked", true);
                         };
-                        map.setView([datum.lat, datum.lng], 17);
+                        map.fitBounds(datum.bounds);
                         if (map._layers[datum.id]) {
                             highlightportpoly(map._layers[datum.id]);
                         }; 
@@ -1344,7 +1347,7 @@
                             map.addLayer(anchorageGroup);
                             $("#anchorageGroup").prop("checked", true);
                         };
-                        map.setView([datum.lat, datum.lng], 17);
+                        map.fitBounds(datum.bounds);
                         if (map._layers[datum.id]) {
                             highlightanchoragepoly(map._layers[datum.id]);
                         }; 

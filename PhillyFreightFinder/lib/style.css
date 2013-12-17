@@ -98,8 +98,8 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         .fcinfo{color:#C2332C;}
         .airinfo{color:#3B6E35;}
         
-        .uncheck{background:url('images/check.png') no-repeat;}
-        .check{background:url('images/uncheck.png') no-repeat;}
+        .uncheck{background:url('images/check.png') no-repeat;cursor:pointer;}
+        .check{background:url('images/uncheck.png') no-repeat;cursor:pointer;}
         a.toggle {
             position: fixed;
             left: 0;
