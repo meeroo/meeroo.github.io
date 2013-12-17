@@ -573,11 +573,19 @@
 		function highlightFCinterpoly(e) {
 				resetHighlight();
 				var layer = e.target;
-				layer.setStyle({
+				var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					layer.setStyle({ 
 					weight: 6,color:"#00ffff"
-				});
-				var props = layer.feature.properties
-                var info = '<h1>' + props.Name + '</h1>';
+					});
+					var props = layer.feature.properties;
+				}else{                        
+					e.setStyle({ 
+					weight: 6,color:"#00ffff"
+					});
+					var props = layersearch.properties;
+				}
+                var info = '<p>' + props.Name + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
@@ -589,15 +597,22 @@
 				document.getElementById('infoheader').innerHTML = info;
 				document.getElementById('info').innerHTML = content;
 				document.getElementById('infoheader').className = 'frtctrintcl';	
-				document.getElementById('iconography').className = 'fcintericon';
+				document.getElementById('iconography').className = 'fcintericon icon';
+			toggleinfo();
 			};
 	//Intermediate point
 		function highlightFCinterpt(e) {
 			resetHighlight();
-            highlightMarkers(e);
-			var layer = e.target;
-			var props = layer.feature.properties
-            var info = '<h1>' + props.Name + '</h1>';
+            var layer = e.target;
+            var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				highlightMarkers(e);
+				var props = layer.feature.properties;
+			}else{                        
+				highlightMarkersearch(e);
+				var props = layersearch.properties;
+			}
+            var info = '<p>' + props.Name + '</p>';
 			var content = "<table style='border-bottom:1px solid #999999;'>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
                     +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
@@ -609,17 +624,26 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'frtctrintcl';	
-			document.getElementById('iconography').className = 'fcintericon';
+			document.getElementById('iconography').className = 'fcintericon icon';
+			toggleinfo();
 		};
 	//Major Poly
 		function highlightFCmajorpoly(e) {
 				resetHighlight();
 				var layer = e.target;
-				layer.setStyle({
+				var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					layer.setStyle({ 
 					weight: 6,color:"#00ffff"
-				});
-                var props = layer.feature.properties
-				var info = '<h1>' + props.Name + '</h1>';
+					});
+					var props = layer.feature.properties;
+				}else{                        
+					e.setStyle({ 
+					weight: 6,color:"#00ffff"
+					});
+					var props = layersearch.properties;
+				}
+				var info = '<p>' + props.Name + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
@@ -631,15 +655,22 @@
 				document.getElementById('infoheader').innerHTML = info;
 				document.getElementById('info').innerHTML = content;
 				document.getElementById('infoheader').className = 'frtctrmajcl';	
-				document.getElementById('iconography').className = 'fcmajoricon';
+				document.getElementById('iconography').className = 'fcmajoricon icon';
+			toggleinfo();
 			};	
 	//Major point
 		function highlightFCmajorpt(e) {
 			resetHighlight();
-            highlightMarkers(e);
-			var layer = e.target;
-            var props = layer.feature.properties
-			var info = '<h1>' + props.Name + '</h1>';
+            var layer = e.target;
+            var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				highlightMarkers(e);
+				var props = layer.feature.properties;
+			}else{                        
+				highlightMarkersearch(e);
+				var props = layersearch.properties;
+			}
+			var info = '<p>' + props.Name + '</p>';
             var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
@@ -651,17 +682,26 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'frtctrmajcl';	
-			document.getElementById('iconography').className = 'fcmajoricon';
+			document.getElementById('iconography').className = 'fcmajoricon icon';
+			toggleinfo();
 		};
 	//Mega Poly
 		function highlightFCmegapoly(e) {
 			resetHighlight();
 			var layer = e.target;
-			layer.setStyle({
+			var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				layer.setStyle({ 
 				weight: 6,color:"#00ffff"
-			});
-            var props = layer.feature.properties
-			var info = '<h1>' + props.Name + '</h1>';
+				});
+				var props = layer.feature.properties;
+			}else{                        
+				e.setStyle({ 
+				weight: 6,color:"#00ffff"
+				});
+				var props = layersearch.properties;
+			}
+			var info = '<p>' + props.Name + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
@@ -673,15 +713,22 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'frtctrmegcl';	
-			document.getElementById('iconography').className = 'fcmegicon';
+			document.getElementById('iconography').className = 'fcmegicon icon';
+			toggleinfo();
 		};			
 	//Mega point
 		function highlightFCmegapt(e) {
 			resetHighlight();
-            highlightMarkers(e);
-			var layer = e.target;
-            var props = layer.feature.properties
-			var info = '<h1>' + props.Name + '</h1>';
+            var layer = e.target;
+            var layersearch = e.feature;   
+			if (layersearch===undefined){  
+				highlightMarkers(e);
+				var props = layer.feature.properties;
+			}else{                        
+				highlightMarkersearch(e);
+				var props = layersearch.properties;
+			}
+			var info = '<p>' + props.Name + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Center_Typ + " Center</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity(ies): </i>" + props.Township_s + "</td></tr></table>"
@@ -693,7 +740,8 @@
 			document.getElementById('infoheader').innerHTML = info;
 			document.getElementById('info').innerHTML = content;
 			document.getElementById('infoheader').className = 'frtctrmegcl';	
-			document.getElementById('iconography').className = 'fcmegicon';
+			document.getElementById('iconography').className = 'fcmegicon icon';
+			toggleinfo();
 		};
 
 	//Airport features///////////
@@ -885,9 +933,9 @@
 			river.setStyle({fillColor: "#55B8DF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
 			portpoly.setStyle({fillColor: "#29A0CF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
 			anchoragepoly.setStyle({fillColor: "#0E76BC", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
-//			FCinterpoly.setStyle({fillColor: "#F9AB90", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
-//			FCmajorpoly.setStyle({fillColor: "#F26122", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
-//			FCmegapoly.setStyle({fillColor: "#C1332B", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			FCinterpoly.setStyle({fillColor: "#F9AB90", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			FCmajorpoly.setStyle({fillColor: "#F26122", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			FCmegapoly.setStyle({fillColor: "#C1332B", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
 			commairpoly.setStyle({fillColor: "#216937", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
 			relairpoly.setStyle({fillColor: "#30B34C", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
    	        resetIconhighlights();

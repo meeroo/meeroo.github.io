@@ -82,9 +82,9 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         label.commic {background: url('images/flat/airport1.png') no-repeat;}
         label.relic {background: url('images/flat/airport2.png') no-repeat;}
         label.helic {background: url('images/flat/heliport.png') no-repeat;}
-        label.megic {background: url('images/19.png') no-repeat;}
-        label.majic {background: url('images/18.png') no-repeat;}
-        label.interic {background: url('images/17.png') no-repeat;}
+        label.megic {background: url('images/flat/19.png') no-repeat;}
+        label.majic {background: url('images/flat/18.png') no-repeat;}
+        label.interic {background: url('images/flat/17.png') no-repeat;}
 
         .infobox {
             background:url('images/panelInfo.png') no-repeat right top;
@@ -190,12 +190,18 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		background-color: #0E76BC!important;
 		}
 .frtctrintcl {
+        color:#BB5D3B!important;
+        border-color: #F9AB90!important;
 		background-color: #F9AB90!important;
 		}
 .frtctrmajcl {
+        color:white!important;
+        border-color: #F26122!important;
 		background-color: #F26122!important;
 		}
 .frtctrmegcl {
+        color:white!important;
+        border-color: #C1332B!important;
 		background-color: #C1332B!important;
 		}
 .commaircl {
@@ -209,7 +215,7 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		background-color: #30B34C!important;
 		}
 .heliportcl {
-        color:white!important;
+        color:#60814C!important;
         border-color: #B2D39E!important;
         background-color: #B2D39E!important;
         }
@@ -252,13 +258,13 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		background-image:url('images/flat/anchor.png');
 		}
 .fcintericon{
-		background-image:url('images/17.png');
+		background-image:url('images/flat/17.png');
 		}
 .fcmajoricon{
-		background-image:url('images/18.png');
+		background-image:url('images/flat/18.png');
 		}
 .fcmegicon{
-		background-image:url('images/19.png');
+		background-image:url('images/flat/19.png');
 		}
 .commercialicon{
 		background-image:url('images/flat/airport1.png');
