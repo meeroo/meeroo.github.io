@@ -271,11 +271,10 @@
                                 </div>
                             </div>
                         </div>
-                        <!--
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                     <a href=""><div class="mricon-info airinfo"> </div></a>
+                                     <a href="#" onclick="$('#railModal').modal('show'); return false;"><div class="PFFicon-info legicon airinfo"> </div></a>
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_" href="#Air-layers">
                                         <div class="panellink airinfo">
                                             <span>Airports</span>
@@ -284,7 +283,7 @@
                                     <div class="togglebox"><div id="air_all" class="uncheck" style="width:100%;height:100%;"> </div></div>
                                 </div>
                                 <div id="Air-layers" class="panel-collapse collapse">
-                                    <div class="panel-body" style="padding: 0px 15px;">
+                                    <div class="panel-body" style="padding: 0px;">
                                         <input type="hidden" id="airChkd" value="false" />
                                         <div class="checkbox">
                                             <input type="checkbox" name="LayerCont" id="commGroup" class="air" z-index="1" checked>
@@ -294,10 +293,15 @@
                                             <input type="checkbox" name="LayerCont" id="relGroup" class="air" z-index="2" checked>
                                             <label class="relic" for="relGroup">Reliever</label>
                                         </div>
+                                        <div class="checkbox last">
+                                            <input type="checkbox" name="LayerCont" id="heliport" class="air" z-index="2" checked>
+                                            <label class="helic" for="heliport">Heliport</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                      <!--
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -511,7 +515,7 @@
         <script type="text/javascript" src="lib/PFFactions.js"></script>
         <script type="text/javascript">
             //establish map and search groups
-            var map, countySearch = [], highwaySearch = [], truckParkSearch = [], nhsSearch = [], hwyBridgeSearch = [], railSearch = [], railyardSearch = [], intermodalSearch = [], RailBridgeSearch = [], xingSearch = [], riverSearch =[], portSearch =[], anchSearch = []; 
+            var map, countySearch = [], highwaySearch = [], truckParkSearch = [], nhsSearch = [], hwyBridgeSearch = [], railSearch = [], railyardSearch = [], intermodalSearch = [], RailBridgeSearch = [], xingSearch = [], riverSearch =[], portSearch =[], anchSearch = [], commairSearch =[], relairSearch = [], heliportSearch = []; 
 
             $(document).ready(function() {
                 $('[rel=tooltip]').tooltip();
@@ -991,7 +995,116 @@
                 $.getJSON("data/anchPts.geojson", function (data) {
                     anchoricon.addData(data);
                 });
+                //define airport layers
+                //define commercial airports
+                var commairpoly = L.geoJson(null, {
+                    style: {fillColor: "#216937", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},    
+                    onEachFeature: function (feature, layer){
+                        layer.on({
+                            click: highlightcommairpoly,
+                            dblclick: zoomToFeature
+                        });
+                        commairSearch.push({
+                                value: layer.feature.properties.Name,
+                                tokens: [layer.feature.properties.Name, layer.feature.properties.NAVID],
+                                layer: "CommAirports",
+                                id: L.stamp(layer),
+                                bounds: layer.getBounds()
+                        });
+                    }
+                });
+                $.getJSON("data/commPoly.geojson", function (data) {
+                    commairpoly.addData(data);
+                });
+                var commicon = L.icon({
+                    iconUrl: 'lib/images/airport1.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15],
+                    popupAnchor: [0, 15]
+                });
+                var commairpt = L.geoJson(null, {
+                        pointToLayer: function (feature, latlng) {
+                            return L.marker(latlng, {icon: commicon});
+                            },
+                        onEachFeature: function (feature, layer){
+                            layer.on({
+                                click: highlightcommairpt,
+                                dblclick: zoomToPoint
+                            });
+                            }
+                });
+                $.getJSON("data/commPts.geojson", function (data) {
+                    commairpt.addData(data);
+                });
 
+                //define releiver airports
+                var relairpoly = L.geoJson(null, {
+                    style: {fillColor: "#30B34C", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75},    
+                    onEachFeature: function (feature, layer){
+                        layer.on({
+                            click: highlightrelairpoly,
+                            dblclick: zoomToFeature
+                        });
+                        relairSearch.push({
+                                value: layer.feature.properties.Name_1,
+                                tokens: [layer.feature.properties.Name_1, layer.feature.properties.NAVID],
+                                layer: "ReleivAirports",
+                                id: L.stamp(layer),
+                                bounds: layer.getBounds()
+                        });
+                    }
+                });
+                $.getJSON("data/releivPoly.geojson", function (data) {
+                    relairpoly.addData(data);
+                });
+                var relvicon = L.icon({
+                            iconUrl: 'lib/images/airport2.png',
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 15],
+                            popupAnchor: [0, 15]
+                    });
+                var relvairpt = L.geoJson(null, {
+                        pointToLayer: function (feature, latlng) {
+                            return L.marker(latlng, {icon: relvicon});
+                            },
+                        onEachFeature: function (feature, layer){
+                            layer.on({
+                                click: highlightrelvairpt,
+                                dblclick: zoomToPoint
+                            });
+                            }
+                });
+                $.getJSON("data/releivPts.geojson", function (data) {
+                    relvairpt.addData(data);
+                });
+                var helicon = L.icon({
+                            iconUrl: 'lib/images/heliport.png',
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 15],
+                            popupAnchor: [0, 15]
+                    });
+                var heliport = L.geoJson(null, {
+                        pointToLayer: function (feature, latlng) {
+                            return L.marker(latlng, {icon: helicon});
+                            },
+                        onEachFeature: function (feature, layer){
+                            layer.on({
+                                click: highlightheliport,
+                                dblclick: zoomToPoint
+                            });
+                            heliportSearch.push({
+                                value: layer.feature.properties.FacilityNa,
+                                tokens: [layer.feature.properties.FacilityNa, layer.feature.properties.LocationID],
+                                layer: "Heliports",
+                                id: L.stamp(layer),
+                                lat: layer.feature.geometry.coordinates[1],
+                                lng: layer.feature.geometry.coordinates[0]
+                            });
+                            }
+                });
+                $.getJSON("data/heliports.geojson", function (data) {
+                    heliport.addData(data);
+                });
 
 
             // Static DVRPC Layers
@@ -1043,6 +1156,13 @@
                 "Port Terminal": portGroup,
                 "Anchorage": anchorageGroup
             };
+            var commGroup = new L.FeatureGroup([commairpt, commairpoly]).addTo(map);
+            var relGroup = new L.FeatureGroup([relvairpt, relairpoly]).addTo(map);
+            var airport = {
+                "Commercial": commGroup,
+                "Reliever": relGroup
+            };
+            map.addLayer(heliport);
             var nhsgroup =new L.FeatureGroup([nhspoly, nhs]).addTo(map);
             var trkparkgroup =new L.FeatureGroup([truckparkpoly, tppoints]).addTo(map);
             var Highway = {
@@ -1205,6 +1325,21 @@
                     minLength: 2,
                     header: "<h5 class='typeahead-header'><img src='lib/images/flat/anchor.png' class='searchico'>Anchorages</h5>"
                 },{
+                    name: "CommAirports",
+                    local: commairSearch,
+                    minLength: 2,
+                    header: "<h5 class='typeahead-header'><img src='lib/images/flat/aiport1.png' class='searchico'>Commercial Airports</h5>"
+                },{
+                    name: "ReleivAirports",
+                    local: relairSearch,
+                    minLength: 2,
+                    header: "<h5 class='typeahead-header'><img src='lib/images/flat/airport2.png' class='searchico'>Releiver Airports</h5>"
+                },{
+                    name: "Heliports",
+                    local: heliportSearch,
+                    minLength: 2,
+                    header: "<h5 class='typeahead-header'><img src='lib/images/flat/heliport.png' class='searchico'>Heliports</h5>"
+                },{
                     name: "GeoNames",
                     remote: {
                         url: "http://ws.geonames.org/searchJSON?featureClass=P&maxRows=5&countryCode=US&name_startsWith=%QUERY",
@@ -1350,6 +1485,36 @@
                         map.fitBounds(datum.bounds);
                         if (map._layers[datum.id]) {
                             highlightanchoragepoly(map._layers[datum.id]);
+                        }; 
+                    };
+                    if (datum.layer === "CommAirports") {
+                        if (!map.hasLayer(commGroup)) {
+                            map.addLayer(commGroup);
+                            $("#commGroup").prop("checked", true);
+                        };
+                        map.fitBounds(datum.bounds);
+                        if (map._layers[datum.id]) {
+                            highlightcommairpoly(map._layers[datum.id]);
+                        }; 
+                    };
+                    if (datum.layer === "ReleivAirports") {
+                        if (!map.hasLayer(relGroup)) {
+                            map.addLayer(relGroup);
+                            $("#relGroup").prop("checked", true);
+                        };
+                        map.fitBounds(datum.bounds);
+                        if (map._layers[datum.id]) {
+                            highlightrelairpoly(map._layers[datum.id]);
+                        }; 
+                    };
+                    if (datum.layer === "Heliports") {
+                        if (!map.hasLayer(heliport)) {
+                            map.addLayer(heliport);
+                            $("#heliport").prop("checked", true);
+                        };
+                        map.setView([datum.lat, datum.lng], 17);
+                        if (map._layers[datum.id]) {
+                            highlightheliport(map._layers[datum.id]);
                         }; 
                     };
                     if (datum.layer === "GeoNames") {

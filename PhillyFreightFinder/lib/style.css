@@ -79,8 +79,9 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         label.riveric {background: url('images/flat/river.png') no-repeat;}
         label.anchic {background: url('images/flat/anchor.png') no-repeat;}
         label.portic {background: url('images/flat/ports.png') no-repeat;}
-        label.commic {background: url('images/airport1.png') no-repeat;}
-        label.relic {background: url('images/airport2.png') no-repeat;}
+        label.commic {background: url('images/flat/airport1.png') no-repeat;}
+        label.relic {background: url('images/flat/airport2.png') no-repeat;}
+        label.helic {background: url('images/flat/heliport.png') no-repeat;}
         label.megic {background: url('images/19.png') no-repeat;}
         label.majic {background: url('images/18.png') no-repeat;}
         label.interic {background: url('images/17.png') no-repeat;}
@@ -96,7 +97,7 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         .railinfo{color:#FBA919;}
         .portinfo{color:#0E76BC;}
         .fcinfo{color:#C2332C;}
-        .airinfo{color:#3B6E35;}
+        .airinfo{color:#216937;}
         
         .uncheck{background:url('images/check.png') no-repeat;cursor:pointer;}
         .check{background:url('images/uncheck.png') no-repeat;cursor:pointer;}
@@ -198,11 +199,20 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		background-color: #C1332B!important;
 		}
 .commaircl {
-		background-color: #3C6E35!important;
+        color:white!important;
+        border-color: #216937!important;
+		background-color: #216937!important;
 		}
 .relaircl {
-		background-color: #00B04F!important;
+        color:white!important;
+        border-color: #30B34C!important;
+		background-color: #30B34C!important;
 		}
+.heliportcl {
+        color:white!important;
+        border-color: #B2D39E!important;
+        background-color: #B2D39E!important;
+        }
 
 .icon{width:35px;}
 .hwyicon{
@@ -251,11 +261,14 @@ h1 {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		background-image:url('images/19.png');
 		}
 .commercialicon{
-		background-image:url('images/airport1.png');
+		background-image:url('images/flat/airport1.png');
 		}
 .releivericon{
-		background-image:url('images/airport2.png');
+		background-image:url('images/flat/airport2.png');
 		}
+.heliporticon{
+        background-image:url('images/flat/heliport.png');
+        }
 
 /*---UI Layer Control Styles--------*/
 #map-ui {

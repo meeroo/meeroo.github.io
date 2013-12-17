@@ -701,11 +701,19 @@
 		function highlightcommairpoly(e) {
 				resetHighlight();
 				var layer = e.target;
-				layer.setStyle({
+				var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					layer.setStyle({ 
 					weight: 6,color:"#00ffff"
-				});
-                var props = layer.feature.properties
-				var info = '<h1>(' + props.NAVID + ') ' + props.Name + '</h1>';
+					});
+					var props = layer.feature.properties;
+				}else{                        
+					e.setStyle({ 
+					weight: 6,color:"#00ffff"
+					});
+					var props = layersearch.properties;
+				}
+				var info = '<p>(' + props.NAVID + ') ' + props.Name + '</p>';
 				var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
@@ -721,15 +729,22 @@
 				document.getElementById('infoheader').innerHTML = info;
 				document.getElementById('info').innerHTML = content;
 				document.getElementById('infoheader').className = 'commaircl';	
-				document.getElementById('iconography').className = 'commercialicon';
+				document.getElementById('iconography').className = 'commercialicon icon';
+			toggleinfo();
 			};
 	//Commercial point
 		function highlightcommairpt(e) {
     			resetHighlight();
-                highlightMarkers(e);
-    			var layer = e.target;
-    			var props = layer.feature.properties
-                var info = '<h1>(' + props.NAVID + ") " +props.Name_1 + '</h1>';
+                var layer = e.target;
+	            var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					highlightMarkers(e);
+					var props = layer.feature.properties;
+				}else{                        
+					highlightMarkersearch(e);
+					var props = layersearch.properties;
+				}
+                var info = '<p>(' + props.NAVID + ") " +props.Name_1 + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
@@ -745,17 +760,26 @@
     			document.getElementById('infoheader').innerHTML = info;
     			document.getElementById('info').innerHTML = content;
     			document.getElementById('infoheader').className = 'commaircl';	
-    			document.getElementById('iconography').className = 'commercialicon';
+    			document.getElementById('iconography').className = 'commercialicon icon';
+				toggleinfo();
 		};
 	//releiver Poly
 		function highlightrelairpoly(e) {
 				resetHighlight();
 				var layer = e.target;
-				layer.setStyle({
+				var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					layer.setStyle({ 
 					weight: 6,color:"#00ffff"
-				});
-				var props = layer.feature.properties
-                var info = '<h1>(' + props.NAVID + ") " +props.Name + '</h1>';
+					});
+					var props = layer.feature.properties;
+				}else{                        
+					e.setStyle({ 
+					weight: 6,color:"#00ffff"
+					});
+					var props = layersearch.properties;
+				}
+                var info = '<p>(' + props.NAVID + ") " +props.Name + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
@@ -771,15 +795,22 @@
 				document.getElementById('infoheader').innerHTML = info;
 				document.getElementById('info').innerHTML = content;
 				document.getElementById('infoheader').className = 'relaircl';
-				document.getElementById('iconography').className = 'releivericon';
+				document.getElementById('iconography').className = 'releivericon icon';
+				toggleinfo();
 			};
 	//releiver point
 		function highlightrelvairpt(e) {
     			resetHighlight();
-                highlightMarkers(e);
-    			var layer = e.target;
-    			var props = layer.feature.properties
-                var info = '<h1>(' + props.NAVID + ") " +props.Name_1 + '</h1>';
+                var layer = e.target;
+	            var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					highlightMarkers(e);
+					var props = layer.feature.properties;
+				}else{                        
+					highlightMarkersearch(e);
+					var props = layersearch.properties;
+				}
+                var info = '<p>(' + props.NAVID + ") " +props.Name_1 + '</p>';
                 var content = "<table style='border-bottom:1px solid #999999;'>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Type: </i>" + props.Airport_Ty + "</td></tr>"
                         +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner_1 + "</td></tr>"
@@ -795,9 +826,38 @@
     			document.getElementById('infoheader').innerHTML = info;
     			document.getElementById('info').innerHTML = content;
     			document.getElementById('infoheader').className = 'relaircl';	
-    			document.getElementById('iconography').className = 'releivericon';
+    			document.getElementById('iconography').className = 'releivericon icon';
+				toggleinfo();
 		};	
-		
+	//heliport point
+		function highlightheliport(e) {
+    			resetHighlight();
+               	var layer = e.target;
+	            var layersearch = e.feature;   
+				if (layersearch===undefined){  
+					highlightMarkers(e);
+					var props = layer.feature.properties;
+				}else{                        
+					highlightMarkersearch(e);
+					var props = layersearch.properties;
+				}
+                var info = '<p>(' + props.LocationID + ") " +props.FacilityNa + '</p>';
+                var content = "<table style='border-bottom:1px solid #999999;'>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Owner: </i>" + props.Owner + "</td></tr>"
+                        +"<tr><td><i style='font-size:10px;color:#999999;'>Municiaplity: </i>" + props.City + "</td></tr></table>"
+                        +"<table><tr><td style='width:100%;height:15px;'></td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Diameter: </strong></td><td style='text-align:center;width:100px;'>" + props.Size + " ft.</td></tr>"
+                        +"<tr><td style='width:100px;'><strong style='font-size:12px;'>Annual Operations: </strong></td><td style='text-align:center;width:100px;'>n/a</td></tr>"
+                        +"<i style='font-size:10px;color:#999999;'>Data Source: 2013 DVPRC </i>";
+                        //+"<p>More Information: " + props.REPORT + "</p>"
+                        //+"<p>Related Freight Center: " + props.FC_REPORT + "</p>";
+    			document.getElementById('infoheader').innerHTML = info;
+    			document.getElementById('info').innerHTML = content;
+    			document.getElementById('infoheader').className = 'heliportcl';	
+    			document.getElementById('iconography').className = 'heliporticon icon';
+				toggleinfo();
+			};
+			
 //zoom to polygon feature
 	function zoomToFeature(e) {
 			map.fitBounds(e.target.getBounds());
@@ -822,14 +882,14 @@
 					case 'Interstate Highway': return {color: "#884C9E",weight:5, opacity:1};
 				}	 }),
 			truckparkpoly.setStyle({fillColor: "#884C9E", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
-//			river.setStyle({fillColor: "#55B8DF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
-//			portpoly.setStyle({fillColor: "#29A0CF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
-//			anchoragepoly.setStyle({fillColor: "#0E76BC", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
+			river.setStyle({fillColor: "#55B8DF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
+			portpoly.setStyle({fillColor: "#29A0CF", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			anchoragepoly.setStyle({fillColor: "#0E76BC", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.65}),
 //			FCinterpoly.setStyle({fillColor: "#F9AB90", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
 //			FCmajorpoly.setStyle({fillColor: "#F26122", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
 //			FCmegapoly.setStyle({fillColor: "#C1332B", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
-//			commairpoly.setStyle({fillColor: "#639752", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
-//			relairpoly.setStyle({fillColor: "#6EBD55", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			commairpoly.setStyle({fillColor: "#216937", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
+			relairpoly.setStyle({fillColor: "#30B34C", fillOpacity:.50, weight:1, color:"#E0E0E0 ", opacity:.75}),
    	        resetIconhighlights();
 		}
 
